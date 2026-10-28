@@ -1,0 +1,6 @@
+{
+  "name": "LAV Digital Pagos",
+  "description": "Aplicación profesional para crear, personalizar, publicar y compartir tarjetas digitales de pago para negocios y comercios en Hostinger.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,131 @@
+[
+  {
+    "id": "card_demo_01",
+    "slug": "terraza-gourmet",
+    "businessName": "Terraza Gourmet & Bistro",
+    "tagline": "Cortes Selectos, Cocina de Autor & Mixología",
+    "category": "Restaurante y Gastronomía",
+    "status": "published",
+    "createdAt": "2026-10-25T06:00:00.000Z",
+    "updatedAt": "2026-10-25T06:00:00.000Z",
+    "publishedAt": "2026-10-25T06:00:00.000Z",
+    "logoUrl": "",
+    "logoShape": "circle",
+    "logoSize": "md",
+    "logoAlignment": "center",
+    "templateId": "gastro-culinary",
+    "theme": {
+      "primaryColor": "#991b1b",
+      "secondaryColor": "#b45309",
+      "backgroundColor": "#fdfbf7",
+      "surfaceColor": "#ffffff",
+      "textColor": "#292524",
+      "accentTextColor": "#7f1d1d",
+      "buttonBgColor": "#991b1b",
+      "buttonTextColor": "#fdfbf7",
+      "borderColor": "#e7e5e4",
+      "borderRadius": "md",
+      "fontFamily": "serif",
+      "cardElevation": "soft-shadow",
+      "layoutDensity": "comfortable",
+      "backgroundPattern": "none"
+    },
+    "banking": {
+      "enabled": true,
+      "sectionTitle": "Datos Oficiales para Transferencia (SPEI)",
+      "accounts": [
+        {
+          "id": "acc_01",
+          "accountLabel": "Cuenta Principal — SPEI Sin Comisión",
+          "beneficiary": "Terraza Gourmet SA de CV",
+          "bankName": "BBVA México",
+          "clabe": "012180001234567897",
+          "accountNumber": "0123456789",
+          "cardNumber": "4152313498765432",
+          "accountType": "Cheques / Empresarial",
+          "reference": "Mesa / No. Pedido",
+          "concept": "Consumo Restaurante",
+          "currency": "MXN ($ Pesos Mexicanos)",
+          "instructions": "Por favor envía tu comprobante de transferencia al mesero o por WhatsApp para validar tu cuenta.",
+          "customFields": [],
+          "visibleFields": {
+            "beneficiary": true,
+            "bankName": true,
+            "clabe": true,
+            "accountNumber": true,
+            "cardNumber": true,
+            "accountType": true,
+            "reference": true,
+            "concept": true,
+            "currency": true,
+            "instructions": true
+          },
+          "shareInWhatsApp": true
+        },
+        {
+          "id": "acc_02",
+          "accountLabel": "Cuenta Secundaria — Eventos & Banquetes",
+          "beneficiary": "Terraza Gourmet SA de CV",
+          "bankName": "Santander México",
+          "clabe": "014180605678901234",
+          "accountNumber": "60567890123",
+          "cardNumber": "",
+          "accountType": "Débito Corporativo",
+          "reference": "Nombre del Cliente",
+          "concept": "Apartado de Evento",
+          "currency": "MXN ($ Pesos)",
+          "instructions": "Anticipos y apartado de salones privados.",
+          "customFields": [],
+          "visibleFields": {
+            "beneficiary": true,
+            "bankName": true,
+            "clabe": true,
+            "accountNumber": true,
+            "cardNumber": false,
+            "accountType": true,
+            "reference": true,
+            "concept": true,
+            "currency": true,
+            "instructions": true
+          },
+          "shareInWhatsApp": true
+        }
+      ]
+    },
+    "paypal": {
+      "enabled": true,
+      "sectionTitle": "Pago con Tarjeta o Saldo PayPal",
+      "payUrl": "https://paypal.me/terrazagourmet",
+      "businessName": "Terraza Gourmet Oficial",
+      "description": "Aceptamos todas las tarjetas de crédito y débito a través de PayPal sin costo adicional.",
+      "suggestedAmount": "",
+      "currency": "MXN",
+      "buttonText": "Abrir PayPal para Pagar",
+      "instructions": "Serás redirigido de forma 100% segura al portal oficial de PayPal."
+    },
+    "googleReview": {
+      "enabled": true,
+      "sectionTitle": "¿Disfrutaste tu visita?",
+      "reviewUrl": "https://g.page/r/terrazagourmet/review",
+      "buttonText": "Califícanos en Google ★★★★★",
+      "message": "Tu opinión es muy valiosa para todo nuestro equipo culinario. ¡Déjanos tu reseña!"
+    },
+    "whatsapp": {
+      "enabled": true,
+      "phoneNumber": "525512345678",
+      "businessPhoneFormatted": "+52 55 1234 5678",
+      "shareCardMessage": "Hola, te comparto nuestra tarjeta digital de pago para transferencias bancarias y PayPal:",
+      "shareBankMessage": "Te comparto nuestros datos bancarios para transferencia:",
+      "shareAllMessage": "Hola, aquí tienes los métodos oficiales de pago de nuestro negocio:",
+      "promptText": "Confirmar pago por WhatsApp"
+    },
+    "qrCode": {
+      "enabled": true,
+      "includeLogo": true,
+      "size": 260,
+      "fgColor": "#0f172a",
+      "bgColor": "#ffffff"
+    },
+    "publicNotes": "Vigencia oficial de datos bancarios para clientes y proveedores."
+  }
+]
