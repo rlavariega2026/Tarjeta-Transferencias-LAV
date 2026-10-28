@@ -78,7 +78,7 @@ export async function fetchCards(): Promise<PaymentCard[]> {
     
     if (response.ok) {
       const data = await response.json();
-      if (Array.isArray(data) && data.length > 0) {
+      if (Array.isArray(data)) {
         saveLocalCards(data);
         return data;
       }
@@ -142,7 +142,7 @@ export async function saveCard(card: PaymentCard): Promise<{ success: boolean; c
 
   // Guardar en backend (Express en dev / PHP en Hostinger)
   try {
-    const response = await fetch('/api/cards', {
+    const response = await fetch(`${API_BASE}/cards`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
