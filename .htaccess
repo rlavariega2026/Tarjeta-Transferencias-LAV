@@ -1,0 +1,15 @@
+Options -Indexes
+RewriteEngine On
+RewriteBase /Tarjetas-transferencias/
+
+# API routes handled by PHP
+RewriteRule ^api/?$ api/index.php?path= [QSA,L]
+RewriteRule ^api/(.*)$ api/index.php?path=$1 [QSA,L]
+
+# Keep real files and directories accessible
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Public card links and React SPA fallback
+RewriteRule ^ index.html [L]
