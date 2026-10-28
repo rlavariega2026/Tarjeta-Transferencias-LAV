@@ -26,7 +26,7 @@ export default function App() {
   // Registro del Service Worker para PWA y soporte offline
   useEffect(() => {
     if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
-      navigator.serviceWorker.register('/sw.js').catch((err) => {
+      navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).catch((err) => {
         console.warn('Service worker registration failed:', err);
       });
     }
