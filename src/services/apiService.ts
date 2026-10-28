@@ -1,6 +1,8 @@
 import { PaymentCard } from '../types/paymentCard';
 import { INITIAL_DEMO_CARD } from './templateCatalog';
 
+const API_BASE = `${import.meta.env.BASE_URL}api`;
+
 const LOCAL_STORAGE_KEY = 'lav_pagos_cards_v1';
 const SETTINGS_STORAGE_KEY = 'lav_pagos_hostinger_settings';
 
@@ -11,8 +13,8 @@ export interface HostingerSettings {
 }
 
 export const DEFAULT_HOSTINGER_SETTINGS: HostingerSettings = {
-  baseUrl: 'https://lavdigitalmkt.com/pagos-digitales/',
-  apiEndpoint: '/api',
+  baseUrl: `${window.location.origin}/Tarjetas-transferencias/`,
+  apiEndpoint: `${import.meta.env.BASE_URL}api`,
   useRemoteApi: false
 };
 
@@ -69,7 +71,7 @@ function saveLocalCards(cards: PaymentCard[]): void {
  */
 export async function fetchCards(): Promise<PaymentCard[]> {
   try {
-    const response = await fetch('/api/cards', {
+    const response = await fetch(`${API_BASE}/cards`, {
       headers: { 'Accept': 'application/json' },
       cache: 'no-cache'
     });
@@ -95,7 +97,7 @@ export async function fetchCardBySlug(slug: string): Promise<PaymentCard | null>
   
   // 1. Intento por backend
   try {
-    const response = await fetch(`/api/cards/${encodeURIComponent(cleanSlug)}`, {
+    const response = await fetch(`${API_BASE}/cards/${encodeURIComponent(cleanSlug)}`, {
       headers: { 'Accept': 'application/json' }
     });
     if (response.ok) {
@@ -183,7 +185,7 @@ export async function deleteCard(id: string): Promise<{ success: boolean }> {
   saveLocalCards(filtered);
 
   try {
-    await fetch(`/api/cards/${id}`, { method: 'DELETE' });
+    await fetch(`${API_BASE}/cards/${encodeURIComponent(id)}`, { method: 'DELETE' });
   } catch (err) {
     console.warn('Error llamando a delete en servidor:', err);
   }
@@ -243,7 +245,7 @@ export async function uploadLogo(file: File): Promise<{ url: string }> {
   formData.append('logo', file);
 
   try {
-    const res = await fetch('/api/upload', {
+    const res = await fetch(`${API_BASE}/upload`, {
       method: 'POST',
       body: formData
     });
@@ -278,7 +280,7 @@ export function getCardPublicUrl(slug: string, overrideBaseUrl?: string): string
   
   // Formato limpio compatible con el router y con .htaccess en Hostinger
   // Puede ser: https://lavdigitalmkt.com/pagos-digitales/?card=slug o /t/slug
-  if (base.includes('lavdigitalmkt.com')) {
+  if (base.includes('/Tarjetas-transferencias') || base.includes('lavdigitalagency.com')) {
     return `${cleanBase}t/${encodeURIComponent(slug)}`;
   }
   
@@ -297,7 +299,7 @@ export async function testServerConnection(): Promise<{
   message: string;
 }> {
   try {
-    const res = await fetch('/api/health', { cache: 'no-cache' });
+    const res = await fetch(`${API_BASE}/health`, { cache: 'no-cache' });
     if (res.ok) {
       const data = await res.json();
       return {
