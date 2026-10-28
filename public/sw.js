@@ -1,5 +1,5 @@
 // Service Worker for LAV Digital Pagos
-const CACHE_NAME = 'lav-pagos-v1';
+const CACHE_NAME = 'lav-pagos-hostinger-v2';
 const STATIC_ASSETS = [
   './',
   './index.html',
