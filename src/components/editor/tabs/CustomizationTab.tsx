@@ -18,6 +18,17 @@ export const CustomizationTab: React.FC<CustomizationTabProps> = ({
   const theme = card.theme;
   const backgroundInputRef = useRef<HTMLInputElement>(null);
 
+  const handleBackgroundUpload = async (file?: File) => {
+    if (!file) return;
+    try {
+      const result = await uploadLogo(file);
+      updateTheme({ backgroundImage: result.url });
+      onNotify('Fondo actualizado', 'La imagen se guardó y aparecerá en la tarjeta publicada.', 'success');
+    } catch (error: any) {
+      onNotify('No se pudo cargar el fondo', error?.message || 'Usa una imagen PNG, JPG o WebP.', 'error');
+    }
+  };
+
   const updateTheme = (updates: Partial<typeof card.theme>) => {
     onChange({
       theme: { ...theme, ...updates }
