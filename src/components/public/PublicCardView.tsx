@@ -2,19 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { CardRenderer } from '../card/CardRenderer';
 import { PaymentCard } from '../../types/paymentCard';
 import { fetchCardBySlug } from '../../services/apiService';
-import { AlertCircle, Smartphone, Share2, ArrowLeft } from 'lucide-react';
+import { AlertCircle, Smartphone, Share2 } from 'lucide-react';
 import { usePWAInstall } from '../../hooks/usePWAInstall';
 
 interface PublicCardViewProps {
   slug: string;
   onNotify: (title: string, desc?: string, type?: 'success' | 'error' | 'info') => void;
-  onGoHome?: () => void;
 }
 
 export const PublicCardView: React.FC<PublicCardViewProps> = ({
   slug,
-  onNotify,
-  onGoHome
+  onNotify
 }) => {
   const [card, setCard] = useState<PaymentCard | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -69,14 +67,7 @@ export const PublicCardView: React.FC<PublicCardViewProps> = ({
           <p className="text-xs text-slate-400 leading-relaxed mb-6">
             {error || 'El enlace que intentas abrir no existe o ha sido despublicado temporalmente por el negocio.'}
           </p>
-          {onGoHome && (
-            <button
-              onClick={onGoHome}
-              className="w-full py-2.5 px-4 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors cursor-pointer"
-            >
-              Ir a LAV Digital Pagos
-            </button>
-          )}
+
         </div>
       </div>
     );
@@ -91,15 +82,7 @@ export const PublicCardView: React.FC<PublicCardViewProps> = ({
     >
       {/* Botón Flotante Superior PWA / Instalar en Celular */}
       <div className="w-full max-w-md flex items-center justify-between py-2 px-1 mb-2">
-        {onGoHome ? (
-          <button
-            onClick={onGoHome}
-            className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-400 hover:text-slate-200 bg-black/10 dark:bg-white/10 px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Panel Admin</span>
-          </button>
-        ) : <div />}
+        <div />
 
         <div className="flex items-center gap-2">
           {isInstallable && (
