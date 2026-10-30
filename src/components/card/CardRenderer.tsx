@@ -362,7 +362,7 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
 
           <div className={card.logoAlignment === 'left' ? 'text-left' : card.logoAlignment === 'right' ? 'text-right' : 'text-center'}>
             <div className="flex items-center gap-2 justify-center mb-1">
-              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-balance leading-snug">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-balance leading-snug" style={{ fontSize: theme.businessNameFontSize || 24 }}>
                 {card.businessName}
               </h1>
               <span title="Cuenta Comercial Verificada">
@@ -371,13 +371,13 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
             </div>
 
             {card.tagline && (
-              <p className="text-xs sm:text-sm opacity-80 font-normal leading-relaxed text-balance">
+              <p className="text-xs sm:text-sm opacity-80 font-normal leading-relaxed text-balance" style={{ fontSize: theme.taglineFontSize || 14 }}>
                 {card.tagline}
               </p>
             )}
 
             {card.category && (
-              <div className="mt-2 text-[11px] font-semibold opacity-60 tracking-wider uppercase">
+              <div className="mt-2 font-semibold opacity-60 tracking-wider uppercase" style={{ fontSize: theme.categoryFontSize || 11 }}>
                 {card.category}
               </div>
             )}
