@@ -329,6 +329,9 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
       }`}
       style={{
         backgroundColor: theme.backgroundColor,
+        backgroundImage: theme.backgroundImage ? `linear-gradient(rgba(0,0,0,0.10), rgba(0,0,0,0.10)), url(${theme.backgroundImage})` : undefined,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
         color: theme.textColor,
         fontFamily: theme.fontFamily === 'serif' ? "'Playfair Display', Georgia, serif" :
                     theme.fontFamily === 'mono' ? "'JetBrains Mono', monospace" :
