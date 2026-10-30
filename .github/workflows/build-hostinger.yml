@@ -1,4 +1,4 @@
-name: Build Hostinger package
+name: Build and deploy to Hostinger
 
 on:
   workflow_dispatch:
@@ -9,31 +9,32 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
+
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+
       - name: Build frontend
         run: npm run build
-      - name: Assemble shared-hosting package
+
+      - name: Assemble frontend package
         run: |
-          mkdir -p deploy/api deploy/data deploy/uploads
+          mkdir -p deploy
           cp -a dist/. deploy/
-          cp api/index.php deploy/api/index.php
           cp .htaccess deploy/.htaccess
-          printf '[]\n' > deploy/data/cards.json
-          cp data/.htaccess deploy/data/.htaccess
-          cp uploads/.htaccess deploy/uploads/.htaccess
           test -f deploy/index.html
-          test -f deploy/api/index.php
+          test -f deploy/.htaccess
           test -f deploy/manifest.json
+
       - name: Upload deployable package
         uses: actions/upload-artifact@v4
         with:
@@ -42,3 +43,21 @@ jobs:
           if-no-files-found: error
           retention-days: 14
           include-hidden-files: true
+
+      - name: Deploy frontend to Hostinger via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftp
+          port: 21
+          server-dir: ./
+          local-dir: ./deploy/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/api/**
+            **/data/**
+            **/uploads/**
