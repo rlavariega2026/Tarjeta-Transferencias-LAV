@@ -77,7 +77,11 @@ export const PublicCardView: React.FC<PublicCardViewProps> = ({
     <div 
       className="min-h-screen flex flex-col items-center justify-start p-3 sm:p-6 transition-colors"
       style={{
-        backgroundColor: card.theme.backgroundColor || '#090d16'
+        backgroundColor: card.theme.backgroundColor || '#090d16',
+        backgroundImage: card.theme.backgroundImage ? `linear-gradient(rgba(0,0,0,0.12), rgba(0,0,0,0.12)), url("${card.theme.backgroundImage}")` : undefined,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
       }}
     >
       {/* Botón Flotante Superior PWA / Instalar en Celular */}
