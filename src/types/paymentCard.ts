@@ -93,6 +93,10 @@ export interface CardTheme {
   layoutDensity: 'compact' | 'comfortable' | 'spacious';
   accentGradient?: string;
   backgroundPattern?: 'none' | 'dots' | 'grid' | 'mesh' | 'radial';
+  backgroundImage?: string;
+  businessNameFontSize?: number;
+  taglineFontSize?: number;
+  categoryFontSize?: number;
 }
 
 export interface PaymentCard {
