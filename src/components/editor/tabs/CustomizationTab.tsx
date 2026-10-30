@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Palette, Type, Square, Sliders, RotateCcw } from 'lucide-react';
 import { PaymentCard } from '../../../types/paymentCard';
 import { getTemplateById } from '../../../services/templateCatalog';
+import { uploadLogo } from '../../../services/apiService';
 
 interface CustomizationTabProps {
   card: PaymentCard;
@@ -15,6 +16,7 @@ export const CustomizationTab: React.FC<CustomizationTabProps> = ({
   onNotify
 }) => {
   const theme = card.theme;
+  const backgroundInputRef = useRef<HTMLInputElement>(null);
 
   const updateTheme = (updates: Partial<typeof card.theme>) => {
     onChange({
