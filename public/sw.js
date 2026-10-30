@@ -1,5 +1,6 @@
 // Service Worker for LAV Digital Pagos
-const CACHE_NAME = 'lav-pagos-hostinger-v2';
+// Bump this value whenever a new frontend version is deployed.
+const CACHE_NAME = 'lav-pagos-hostinger-v3';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -9,61 +10,60 @@ const STATIC_ASSETS = [
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(STATIC_ASSETS);
-    })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
   );
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
-        })
-      );
-    })
+    caches.keys().then((keys) =>
+      Promise.all(
+        keys
+          .filter((key) => key.startsWith('lav-pagos-hostinger-') && key !== CACHE_NAME)
+          .map((key) => caches.delete(key))
+      )
+    )
   );
   self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
-  // Pass through non-GET and API calls directly to network
-  if (event.request.method !== 'GET' || event.request.url.includes('/api/')) {
+  const request = event.request;
+  const url = new URL(request.url);
+
+  // API requests and non-GET requests must always reach the server.
+  if (request.method !== 'GET' || url.pathname.includes('/api/')) return;
+
+  // Always ask the server for the latest app shell. Use cache only offline.
+  if (request.mode === 'navigate' || url.pathname.endsWith('/index.html')) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response && response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put('./index.html', copy));
+          }
+          return response;
+        })
+        .catch(async () => {
+          const cached = await caches.match('./index.html');
+          return cached || Response.error();
+        })
+    );
     return;
   }
 
+  // Hashed build assets are immutable; cache them after the first network load.
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        // Fetch in background to update cache
-        fetch(event.request).then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, networkResponse);
-            });
-          }
-        }).catch(() => {});
-        return cachedResponse;
-      }
-      return fetch(event.request).then((networkResponse) => {
-        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
-          return networkResponse;
+    caches.match(request).then((cached) => {
+      if (cached) return cached;
+      return fetch(request).then((response) => {
+        if (response && response.ok && response.type === 'basic') {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
         }
-        const responseToCache = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
-        return networkResponse;
-      }).catch(() => {
-        // Fallback for navigation requests
-        if (event.request.mode === 'navigate') {
-          return caches.match('./index.html');
-        }
+        return response;
       });
     })
   );
