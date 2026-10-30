@@ -509,6 +509,29 @@ export const TEMPLATES_CATALOG: TemplateDefinition[] = [
   }
 ];
 
+const extraPalettes = [
+  ['pastel-lilac','21. Lila Pastel','Lavanda y malva para marcas delicadas.','#8b5cf6','#c084fc','#f5f0ff','#302044'],
+  ['oceanic-blue','22. Azul Océano','Azul profundo y turquesa para negocios profesionales.','#075985','#06b6d4','#eaf7fb','#082f49'],
+  ['terracotta-modern','23. Terracota Moderna','Arcilla, arena y crema para marcas cálidas.','#c2410c','#d97706','#f8eee6','#431407'],
+  ['emerald-luxe','24. Esmeralda Premium','Verde joya y marfil para servicios exclusivos.','#047857','#d6a84f','#071c18','#f0fdf4'],
+  ['rose-gold','25. Rosa Oro','Rosa empolvado y oro rosado para belleza y moda.','#be7280','#d6a58f','#fff5f4','#4a2630'],
+  ['midnight-indigo','26. Índigo Medianoche','Índigo y violeta para marcas digitales.','#6366f1','#22d3ee','#10112b','#eef2ff']
+] as const;
+
+TEMPLATES_CATALOG.push(...extraPalettes.map(([id,name,description,primaryColor,secondaryColor,backgroundColor,textColor], index) => ({
+  id, name, description, category: 'Creativo & Moderno',
+  badgeText: 'Nuevo diseño', accentColor: primaryColor,
+  features: ['Paleta de color exclusiva', 'Diseño adaptable a móviles'],
+  defaultTheme: {
+    ...TEMPLATES_CATALOG[index === 1 ? 1 : index === 2 ? 6 : index === 3 ? 2 : index === 4 ? 9 : index === 5 ? 3 : 5].defaultTheme,
+    primaryColor, secondaryColor, backgroundColor, textColor,
+    surfaceColor: index === 3 || index === 5 ? '#191b3c' : '#ffffff',
+    accentTextColor: primaryColor, buttonBgColor: primaryColor,
+    buttonTextColor: '#ffffff', borderColor: secondaryColor,
+    borderRadius: '2xl', fontFamily: index === 2 || index === 4 ? 'serif' : 'display'
+  }
+})));
+
 export function getTemplateById(id: string): TemplateDefinition {
   return TEMPLATES_CATALOG.find(t => t.id === id) || TEMPLATES_CATALOG[0];
 }
