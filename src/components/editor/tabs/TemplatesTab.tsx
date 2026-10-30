@@ -47,7 +47,7 @@ export const TemplatesTab: React.FC<TemplatesTabProps> = ({
         <div>
           <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
             <Layout className="w-4 h-4 text-emerald-400" />
-            <span>20 Plantillas Comerciales Verdaderamente Diferentes</span>
+            <span>26 Plantillas Comerciales Verdaderamente Diferentes</span>
           </h3>
           <p className="text-xs text-slate-400 mt-1">
             Cada plantilla cuenta con una composición visual, tipografía y distribución única. Cambiar de plantilla no borra ningún dato.
@@ -81,7 +81,7 @@ export const TemplatesTab: React.FC<TemplatesTabProps> = ({
         ))}
       </div>
 
-      {/* Cuadrícula de 20 Plantillas */}
+      {/* Cuadrícula de 26 Plantillas */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {filteredTemplates.map((template) => {
           const isSelected = card.templateId === template.id;
