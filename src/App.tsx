@@ -266,11 +266,6 @@ export default function App() {
       <PublicCardView
         slug={publicCardSlug}
         onNotify={addToast}
-        onGoHome={() => {
-          // Limpiar parámetro de búsqueda y volver al panel
-          window.history.pushState({}, '', window.location.pathname);
-          setPublicCardSlug(null);
-        }}
       />
     );
   }
