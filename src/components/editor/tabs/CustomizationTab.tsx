@@ -66,6 +66,36 @@ export const CustomizationTab: React.FC<CustomizationTabProps> = ({
         </button>
       </div>
 
+      {/* Imagen de fondo personalizada */}
+      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-3">
+        <div>
+          <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">Imagen de fondo</h4>
+          <p className="text-xs text-slate-400 mt-1">Sube una fotografía o textura para colocarla detrás de la tarjeta.</p>
+        </div>
+        <input
+          ref={backgroundInputRef}
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+          className="hidden"
+          onChange={(event) => {
+            void handleBackgroundUpload(event.target.files?.[0]);
+            event.currentTarget.value = '';
+          }}
+        />
+        <div className="flex flex-wrap items-center gap-3">
+          <button type="button" onClick={() => backgroundInputRef.current?.click()} className="px-4 py-2.5 rounded-xl text-xs font-semibold bg-emerald-500 hover:bg-emerald-400 text-slate-950">
+            Subir imagen de fondo
+          </button>
+          {theme.backgroundImage && (
+            <button type="button" onClick={() => updateTheme({ backgroundImage: '' })} className="px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 border border-slate-700 text-rose-300">
+              Quitar imagen
+            </button>
+          )}
+        </div>
+        {theme.backgroundImage && <img src={theme.backgroundImage} alt="Vista previa del fondo" className="w-full h-32 object-cover rounded-xl border border-slate-700" />}
+        <p className="text-[11px] text-slate-500">PNG, JPG o WebP. Máximo 5 MB.</p>
+      </div>
+
       {/* 1. Paleta de Colores */}
       <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-4">
         <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
