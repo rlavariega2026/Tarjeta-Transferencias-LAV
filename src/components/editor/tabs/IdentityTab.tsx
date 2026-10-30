@@ -100,6 +100,34 @@ export const IdentityTab: React.FC<IdentityTabProps> = ({
             />
           </div>
 
+          {/* Tamaño de los textos de identidad */}
+          <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4 space-y-4">
+            <div>
+              <h4 className="text-xs font-bold text-slate-200">Tamaño de textos en la tarjeta</h4>
+              <p className="text-[11px] text-slate-400 mt-1">Ajusta cada elemento y revisa el resultado en la vista previa.</p>
+            </div>
+            {([
+              { key: 'businessNameFontSize', label: 'Nombre comercial', value: card.theme.businessNameFontSize || 24, min: 18, max: 42 },
+              { key: 'taglineFontSize', label: 'Eslogan o subtítulo', value: card.theme.taglineFontSize || 14, min: 10, max: 26 },
+              { key: 'categoryFontSize', label: 'Giro comercial o categoría', value: card.theme.categoryFontSize || 11, min: 9, max: 20 }
+            ] as const).map((item) => (
+              <div key={item.key}>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-xs font-medium text-slate-300">{item.label}</label>
+                  <span className="text-xs font-mono text-emerald-400">{item.value}px</span>
+                </div>
+                <input
+                  type="range"
+                  min={item.min}
+                  max={item.max}
+                  value={item.value}
+                  onChange={(event) => onChange({ theme: { ...card.theme, [item.key]: Number(event.target.value) } })}
+                  className="w-full accent-emerald-500"
+                />
+              </div>
+            ))}
+          </div>
+
           {/* Enlace Único / Slug */}
           <div>
             <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center justify-between">
