@@ -167,11 +167,38 @@ export const BankingTab: React.FC<BankingTabProps> = ({
         </label>
       </div>
 
-      <section className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-4">
-        <div className="flex items-center justify-between gap-3"><div><h3 className="text-sm font-bold text-slate-100 flex items-center gap-2"><Wifi className="w-4 h-4 text-cyan-400"/><span>Datos de WiFi</span></h3><p className="text-xs text-slate-400 mt-1">En la tarjeta pública se puede copiar por separado el nombre de la red (SSID) y la contraseña WiFi.</p></div>
-        <label className="relative inline-flex items-center cursor-pointer"><input type="checkbox" checked={wifi.enabled} onChange={e=>onChange({wifi:{...wifi,enabled:e.target.checked}})} className="sr-only peer"/><div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div></label></div>
-        {wifi.enabled&&<div className="grid grid-cols-1 sm:grid-cols-2 gap-4"><div><label className="block text-xs font-semibold text-slate-300 mb-1.5">Nombre de la red (SSID)</label><input type="text" value={wifi.ssid} onChange={e=>onChange({wifi:{...wifi,ssid:e.target.value}})} placeholder="Ej. Mi_Negocio_WiFi" autoComplete="off" className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs"/></div>
-        <div><label className="block text-xs font-semibold text-slate-300 mb-1.5">Contraseña WiFi</label><input type="text" value={wifi.password} onChange={e=>onChange({wifi:{...wifi,password:e.target.value}})} placeholder="Escribe la contraseña de la red" autoComplete="off" className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs"/></div></div>}
+      <section className="bg-slate-900/60 border border-cyan-500/20 rounded-2xl p-5 space-y-4">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
+              <Wifi className="w-4 h-4 text-cyan-400" />
+              <span>Configuración de WiFi</span>
+            </h3>
+            <p className="text-xs text-slate-400 mt-1">Configura aquí la red que aparecerá en la tarjeta. El visitante podrá copiar el nombre y la contraseña desde el bloque WiFi.</p>
+          </div>
+          <label className="relative inline-flex items-center cursor-pointer shrink-0" title="Mostrar u ocultar los datos WiFi en la tarjeta">
+            <input type="checkbox" checked={wifi.enabled} onChange={e=>onChange({wifi:{...wifi,enabled:e.target.checked}})} className="sr-only peer"/>
+            <div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
+          </label>
+        </div>
+        {wifi.enabled && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Nombre de la red (SSID)</label>
+              <input type="text" value={wifi.ssid} onChange={e=>onChange({wifi:{...wifi,ssid:e.target.value}})} placeholder="Ej. Mi_Negocio_WiFi" autoComplete="off" className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs focus:outline-none focus:border-cyan-500"/>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Contraseña WiFi</label>
+              <div className="flex gap-2">
+                <input type="text" value={wifi.password} onChange={e=>onChange({wifi:{...wifi,password:e.target.value}})} placeholder="Escribe la contraseña de la red" autoComplete="off" className="min-w-0 flex-1 px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs focus:outline-none focus:border-cyan-500"/>
+                <button type="button" disabled={!wifi.password} onClick={async()=>{try{await navigator.clipboard.writeText(wifi.password);onNotify('Contraseña copiada','La contraseña WiFi se copió al portapapeles.','success');}catch{onNotify('No se pudo copiar','El navegador no permitió acceder al portapapeles.','error');}}} className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-semibold hover:bg-cyan-500/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors" title="Copiar contraseña WiFi">
+                  <Copy className="w-3.5 h-3.5"/>
+                  <span>Copiar</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
       {card.banking.enabled && (
