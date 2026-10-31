@@ -20,6 +20,33 @@ export const PublicCardView: React.FC<PublicCardViewProps> = ({
   const { isInstallable, install, isIOS } = usePWAInstall();
   const [showIosGuide, setShowIosGuide] = useState<boolean>(false);
 
+  // Limpieza defensiva de elementos administrativos que no deben aparecer
+  // en una tarjeta pública, incluso si una plantilla o caché los inserta.
+  useEffect(() => {
+    const removeAdminArtifacts = () => {
+      document.querySelectorAll('a, button, [role="button"]').forEach((element) => {
+        const label = (element.textContent || '').replace(/\\s+/g, ' ').trim().toLowerCase();
+        if (label.includes('panel admin')) {
+          element.remove();
+        }
+      });
+
+      document.querySelectorAll('body *').forEach((element) => {
+        if (element.children.length > 0) return;
+        const label = (element.textContent || '').replace(/\\s+/g, ' ').trim();
+        if (/^ID:\\s*.*\\bLAV Digital Pagos$/i.test(label)) {
+          const container = element.closest('footer') || element.parentElement;
+          container?.remove();
+        }
+      });
+    };
+
+    removeAdminArtifacts();
+    const observer = new MutationObserver(removeAdminArtifacts);
+    observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     loadCard();
   }, [slug]);
