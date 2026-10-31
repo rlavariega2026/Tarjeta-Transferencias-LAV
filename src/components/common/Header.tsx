@@ -61,7 +61,7 @@ export const Header: React.FC<HeaderProps> = ({
               currentView === 'templates' ? 'text-emerald-400 font-semibold' : 'hover:text-slate-200'
             }`}
           >
-            Catálogo 26 Plantillas
+            Catálogo Oficial de 20 Plantillas Comerciales
           </button>
 
           <button
