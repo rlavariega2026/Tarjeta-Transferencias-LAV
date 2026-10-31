@@ -24,6 +24,33 @@ export const PublicCardView: React.FC<PublicCardViewProps> = ({
     loadCard();
   }, [slug]);
 
+  // La vista pública nunca debe mostrar controles administrativos ni metadatos internos.
+  // Se filtran por texto exacto para cubrir tarjetas antiguas y componentes heredados.
+  useEffect(() => {
+    const cleanPublicOnlyElements = () => {
+      document.querySelectorAll('a, button').forEach((element) => {
+        const label = (element.textContent || '').replace(/\\s+/g, ' ').trim();
+        if (/^Panel Admin$/i.test(label) || /^Link de Panel Admin$/i.test(label)) {
+          element.remove();
+        }
+      });
+
+      document.querySelectorAll('body *').forEach((element) => {
+        if (element.children.length > 0) return;
+        const label = (element.textContent || '').replace(/\\s+/g, ' ').trim();
+        if (/^ID:\\s*.+\\s*[•·]\\s*LAV Digital Pagos$/i.test(label)) {
+          const container = element.closest('footer') || element.parentElement;
+          container?.remove();
+        }
+      });
+    };
+
+    cleanPublicOnlyElements();
+    const observer = new MutationObserver(cleanPublicOnlyElements);
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, []);
+
   const loadCard = async () => {
     setLoading(true);
     setError(null);
