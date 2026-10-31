@@ -52,7 +52,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp
           port: 21
-          server-dir: ./
+          server-dir: ./Tarjetas-transferencias/
           local-dir: ./deploy/
           exclude: |
             **/.git*
