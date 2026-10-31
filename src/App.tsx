@@ -4,7 +4,8 @@ import {
   fetchCards, 
   saveCard, 
   deleteCard, 
-  duplicateCard 
+  duplicateCard,
+  getCardPublicUrl
 } from './services/apiService';
 import { TEMPLATES_CATALOG, INITIAL_DEMO_CARD, TemplateDefinition } from './services/templateCatalog';
 import { Header } from './components/common/Header';
@@ -214,7 +215,7 @@ export default function App() {
         if (isPublish) {
           addToast(
             '¡Tarjeta publicada con éxito!',
-            `Tu enlace público activo es: /${result.card.slug}`,
+            `Tu enlace público activo es: ${getCardPublicUrl(result.card.slug)}`,
             'success'
           );
         } else {
