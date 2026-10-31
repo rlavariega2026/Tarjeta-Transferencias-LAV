@@ -16,6 +16,10 @@ RewriteBase /Tarjetas-transferencias/
 RewriteRule ^api/?$ api/index.php?path= [QSA,L]
 RewriteRule ^api/(.*)$ api/index.php?path=$1 [QSA,L]
 
+# Las rutas públicas de tarjetas deben cargar la SPA aunque exista una carpeta física /t.
+RewriteRule ^t/[A-Za-z0-9_-]+/?$ index.html [L]
+RewriteRule ^pagos/[A-Za-z0-9_-]+/?$ index.html [L]
+
 # Keep real files and directories accessible
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
