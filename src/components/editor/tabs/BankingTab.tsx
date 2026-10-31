@@ -10,7 +10,8 @@ import {
   AlertCircle, 
   CheckCircle2, 
   Info,
-  HelpCircle
+  HelpCircle,
+  Wifi
 } from 'lucide-react';
 import { PaymentCard, BankAccount, BankCustomField } from '../../../types/paymentCard';
 import { validateClabe, BANK_CODES } from '../../../services/clabeValidator';
@@ -29,6 +30,7 @@ export const BankingTab: React.FC<BankingTabProps> = ({
   const [selectedAccIndex, setSelectedAccIndex] = useState<number>(0);
   const accounts = card.banking.accounts || [];
   const currentAcc = accounts[selectedAccIndex] || accounts[0];
+  const wifi = card.wifi || { enabled:false, ssid:'', password:'' };
 
   const updateAccount = (index: number, updates: Partial<BankAccount>) => {
     const updatedList = [...accounts];
@@ -164,6 +166,13 @@ export const BankingTab: React.FC<BankingTabProps> = ({
           <div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
         </label>
       </div>
+
+      <section className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-4">
+        <div className="flex items-center justify-between gap-3"><div><h3 className="text-sm font-bold text-slate-100 flex items-center gap-2"><Wifi className="w-4 h-4 text-cyan-400"/><span>Datos de WiFi</span></h3><p className="text-xs text-slate-400 mt-1">El SSID se muestra sin botón de copia; la contraseña sí se puede copiar.</p></div>
+        <label className="relative inline-flex items-center cursor-pointer"><input type="checkbox" checked={wifi.enabled} onChange={e=>onChange({wifi:{...wifi,enabled:e.target.checked}})} className="sr-only peer"/><div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div></label></div>
+        {wifi.enabled&&<div className="grid grid-cols-1 sm:grid-cols-2 gap-4"><div><label className="block text-xs font-semibold text-slate-300 mb-1.5">Nombre de la red (SSID)</label><input type="text" value={wifi.ssid} onChange={e=>onChange({wifi:{...wifi,ssid:e.target.value}})} placeholder="Ej. Mi_Negocio_WiFi" autoComplete="off" className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs"/></div>
+        <div><label className="block text-xs font-semibold text-slate-300 mb-1.5">Contraseña WiFi</label><input type="text" value={wifi.password} onChange={e=>onChange({wifi:{...wifi,password:e.target.value}})} placeholder="Escribe la contraseña de la red" autoComplete="off" className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs"/></div></div>}
+      </section>
 
       {card.banking.enabled && (
         <>

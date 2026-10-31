@@ -17,7 +17,8 @@ import {
   Download,
   Send,
   Sparkles,
-  Layers
+  Layers,
+  Wifi
 } from 'lucide-react';
 import QRCode from 'qrcode';
 import { PaymentCard, BankAccount } from '../../types/paymentCard';
@@ -331,20 +332,17 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
       }`}
       style={{
         backgroundColor: theme.backgroundColor,
-        backgroundImage: theme.backgroundImage ? `linear-gradient(rgba(0,0,0,0.10), rgba(0,0,0,0.10)), url(${theme.backgroundImage})` : undefined,
+        backgroundImage: theme.backgroundImage ? `linear-gradient(rgba(0,0,0,0.10), rgba(0,0,0,0.10)), url(${theme.backgroundImage})` : (theme.backgroundGradient || undefined),
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         color: theme.textColor,
-        fontFamily: theme.fontFamily === 'serif' ? "'Playfair Display', Georgia, serif" :
-                    theme.fontFamily === 'mono' ? "'JetBrains Mono', monospace" :
-                    theme.fontFamily === 'display' ? "'Outfit', sans-serif" :
-                    "'Plus Jakarta Sans', sans-serif"
+        fontFamily: ({sans:"'Plus Jakarta Sans',sans-serif",display:"'Outfit',sans-serif",serif:"'Playfair Display',Georgia,serif",mono:"'JetBrains Mono',monospace",poppins:"'Poppins','Plus Jakarta Sans',sans-serif",montserrat:"'Montserrat',sans-serif",lora:"'Lora',Georgia,serif",space:"'Space Grotesk',sans-serif"} as Record<string,string>)[theme.fontFamily] || "'Plus Jakarta Sans',sans-serif"
       }}
       data-template={templateId}
     >
       {/* Tarjeta Contenedora Principal */}
       <div 
-        className={`premium-card-shell p-5 sm:p-7 rounded-3xl transition-all ${
+        className={`premium-card-shell metallic-${theme.metallicStyle || 'none'} p-5 sm:p-7 rounded-3xl transition-all ${
           templateId === 'neo-brutalist' 
             ? 'border-3 border-black shadow-[6px_6px_0px_#000000]' 
             : templateId === 'glassmorphism-aurora'
@@ -580,7 +578,14 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
         )}
 
                 </div>
-        {/* MÓDULO 2: PAYPAL */}
+        {/* MÓDULO WIFI */}
+        {card.wifi?.enabled&&(card.wifi.ssid||card.wifi.password)&&<section className="mb-6 p-4 rounded-2xl border border-cyan-500/20 bg-cyan-500/5">
+          <h2 className="text-xs font-bold uppercase tracking-wider opacity-80 flex items-center gap-2 mb-3"><Wifi className="w-4 h-4 text-cyan-500"/><span>Conexión WiFi</span></h2>
+          {card.wifi.ssid&&<div className="mb-3 p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10"><span className="text-[11px] font-semibold uppercase tracking-wider block opacity-70">Nombre de la red (SSID)</span><span className="text-sm font-medium break-all block mt-0.5">{card.wifi.ssid}</span></div>}
+          {card.wifi.password&&renderCopyItem('Contraseña WiFi',card.wifi.password,'wifi_password',undefined,true,true)}
+        </section>}
+
+        {/* MÓDULO 2: PAYPAL */
         <div data-premium-section="paypal">
         {card.paypal.enabled && card.paypal.payUrl && (
           <div className="mb-6 p-4 rounded-2xl bg-gradient-to-br from-blue-950/20 via-sky-950/10 to-indigo-950/20 border border-blue-500/20">

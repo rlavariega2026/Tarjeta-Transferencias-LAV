@@ -88,16 +88,20 @@ export interface CardTheme {
   buttonTextColor: string;
   borderColor: string;
   borderRadius: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
-  fontFamily: 'sans' | 'display' | 'serif' | 'mono';
+  fontFamily: 'sans' | 'display' | 'serif' | 'mono' | 'poppins' | 'montserrat' | 'lora' | 'space';
   cardElevation: 'flat' | 'subtle-border' | 'soft-shadow' | 'glass' | 'bold-border';
   layoutDensity: 'compact' | 'comfortable' | 'spacious';
   accentGradient?: string;
+  backgroundGradient?: string;
+  metallicStyle?: 'none' | 'gold' | 'silver' | 'rose-gold' | 'titanium';
   backgroundPattern?: 'none' | 'dots' | 'grid' | 'mesh' | 'radial';
   backgroundImage?: string;
   businessNameFontSize?: number;
   taglineFontSize?: number;
   categoryFontSize?: number;
 }
+
+export interface WifiConfig { enabled: boolean; ssid: string; password: string; }
 
 export interface PaymentCard {
   id: string;
@@ -130,6 +134,7 @@ export interface PaymentCard {
   googleReview: GoogleReviewConfig;
   whatsapp: WhatsAppConfig;
   qrCode: QRCodeConfig;
+  wifi?: WifiConfig;
   
   // Metadatos
   publicNotes?: string;

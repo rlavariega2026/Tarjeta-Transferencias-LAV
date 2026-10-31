@@ -96,6 +96,20 @@ export const CustomizationTab: React.FC<CustomizationTabProps> = ({
         <p className="text-[11px] text-slate-500">PNG, JPG o WebP. Máximo 5 MB.</p>
       </div>
 
+      {/* Paletas rápidas */}
+      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-3"><h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">Paletas premium prediseñadas</h4><div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        {[
+          {name:'Obsidiana / Oro',primary:'#d6b77a',secondary:'#a87935',background:'#17130c',surface:'#241d12',text:'#fff8e8',buttonText:'#17130c'},
+          {name:'Zafiro',primary:'#60a5fa',secondary:'#2563eb',background:'#071629',surface:'#102b49',text:'#eff6ff',buttonText:'#071629'},
+          {name:'Esmeralda',primary:'#34d399',secondary:'#059669',background:'#061b16',surface:'#103126',text:'#ecfdf5',buttonText:'#06251b'},
+          {name:'Rose Gold',primary:'#e8b4ad',secondary:'#b76e79',background:'#24151b',surface:'#38242b',text:'#fff7f5',buttonText:'#24151b'},
+          {name:'Amatista',primary:'#c4b5fd',secondary:'#7c3aed',background:'#160d2b',surface:'#281a42',text:'#faf5ff',buttonText:'#160d2b'},
+          {name:'Carbono',primary:'#67e8f9',secondary:'#0891b2',background:'#080d14',surface:'#111c27',text:'#ecfeff',buttonText:'#080d14'},
+          {name:'Champagne',primary:'#e8cc91',secondary:'#a87935',background:'#211a10',surface:'#302719',text:'#fffaf0',buttonText:'#211a10'},
+          {name:'Marfil',primary:'#475569',secondary:'#94a3b8',background:'#f1f5f9',surface:'#ffffff',text:'#0f172a',buttonText:'#ffffff'}
+        ].map(p=><button key={p.name} type="button" onClick={()=>updateTheme({primaryColor:p.primary,secondaryColor:p.secondary,backgroundColor:p.background,surfaceColor:p.surface,textColor:p.text,accentTextColor:p.primary,buttonBgColor:p.primary,buttonTextColor:p.buttonText,borderColor:p.secondary})} className="rounded-xl border border-slate-700 bg-slate-950 p-2 text-left hover:border-emerald-500 transition-colors"><span className="block h-5 rounded-md mb-2" style={{background:`linear-gradient(90deg,${p.primary},${p.secondary})`}}/><span className="text-[11px] text-slate-200 font-semibold">{p.name}</span></button>)}
+      </div></div>
+
       {/* 1. Paleta de Colores */}
       <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-4">
         <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
@@ -231,6 +245,14 @@ export const CustomizationTab: React.FC<CustomizationTabProps> = ({
         </div>
       </div>
 
+      {/* Degradados y acabados metálicos */}
+      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-4"><h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">Degradados y acabados metálicos</h4><div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <label className="block text-xs font-medium text-slate-300">Fondo degradado<select value={theme.backgroundGradient||''} onChange={e=>updateTheme({backgroundGradient:e.target.value||undefined})} className="mt-1.5 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-200 text-xs">
+          <option value="">Sin degradado</option><option value="linear-gradient(135deg,#09090f 0%,#7f1d3d 55%,#f472b6 100%)">Rubí / Rosa</option><option value="linear-gradient(135deg,#061629 0%,#075985 50%,#67e8f9 100%)">Zafiro / Cian</option><option value="linear-gradient(135deg,#052e1a 0%,#047857 55%,#a3e635 100%)">Esmeralda</option><option value="linear-gradient(135deg,#1e1b4b 0%,#6d28d9 55%,#c4b5fd 100%)">Violeta</option><option value="linear-gradient(135deg,#431407 0%,#9a3412 50%,#fbbf24 100%)">Cobre / Ámbar</option><option value="linear-gradient(135deg,#f8fafc 0%,#cbd5e1 55%,#64748b 100%)">Plata / Hielo</option><option value="linear-gradient(135deg,#211a10 0%,#a87935 55%,#f4e3b4 100%)">Champagne / Oro</option><option value="linear-gradient(135deg,#0f172a 0%,#334155 50%,#94a3b8 100%)">Titanio</option>
+        </select></label>
+        <label className="block text-xs font-medium text-slate-300">Acabado metálico<select value={theme.metallicStyle||'none'} onChange={e=>updateTheme({metallicStyle:e.target.value as any})} className="mt-1.5 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-200 text-xs"><option value="none">Sin acabado metálico</option><option value="gold">Oro</option><option value="silver">Plata</option><option value="rose-gold">Oro rosa</option><option value="titanium">Titanio</option></select></label>
+      </div></div>
+
       {/* 2. Tipografía & Fuente */}
       <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-4">
         <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
@@ -243,7 +265,11 @@ export const CustomizationTab: React.FC<CustomizationTabProps> = ({
             { id: 'sans', name: 'Plus Jakarta Sans', desc: 'Moderna y legible', sample: 'Aa Bb 123' },
             { id: 'display', name: 'Outfit', desc: 'Geométrica & dinámica', sample: 'Aa Bb 123' },
             { id: 'serif', name: 'Playfair Display', desc: 'Editorial & lujo', sample: 'Aa Bb 123' },
-            { id: 'mono', name: 'JetBrains Mono', desc: 'Fintech & técnica', sample: '012 345 678' }
+            { id: 'mono', name: 'JetBrains Mono', desc: 'Fintech & técnica', sample: '012 345 678' },
+            { id: 'poppins', name: 'Poppins', desc: 'Geométrica y actual', sample: 'Aa Bb 123' },
+            { id: 'montserrat', name: 'Montserrat', desc: 'Corporativa y firme', sample: 'Aa Bb 123' },
+            { id: 'lora', name: 'Lora', desc: 'Editorial y elegante', sample: 'Aa Bb 123' },
+            { id: 'space', name: 'Space Grotesk', desc: 'Tecnológica y moderna', sample: 'Aa Bb 123' }
           ].map((font) => (
             <button
               key={font.id}
@@ -259,6 +285,12 @@ export const CustomizationTab: React.FC<CustomizationTabProps> = ({
               <div className="text-xs text-emerald-400 mt-2 font-medium opacity-80">{font.sample}</div>
             </button>
           ))}
+        </div><div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3 border-t border-slate-800">
+          {[
+            {key:'businessNameFontSize',label:'Tamaño del nombre',min:16,max:42,fallback:24},
+            {key:'taglineFontSize',label:'Tamaño del eslogan',min:10,max:24,fallback:14},
+            {key:'categoryFontSize',label:'Tamaño de categoría',min:9,max:18,fallback:11}
+          ].map(item=><label key={item.key} className="block text-xs font-medium text-slate-300"><span className="flex justify-between mb-2"><span>{item.label}</span><strong className="text-emerald-400">{(theme as any)[item.key]||item.fallback}px</strong></span><input type="range" min={item.min} max={item.max} value={(theme as any)[item.key]||item.fallback} onChange={e=>updateTheme({[item.key]:Number(e.target.value)} as any)} className="w-full accent-emerald-500"/></label>)}
         </div>
       </div>
 

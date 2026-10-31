@@ -126,7 +126,7 @@ export const EditorLayout: React.FC<EditorLayoutProps> = ({
 
   const tabsConfig = [
     { key: 'identity', label: 'Identidad & Logo', icon: Building },
-    { key: 'templates', label: '30 Plantillas', icon: Layout },
+    { key: 'templates', label: '50 Plantillas', icon: Layout },
     { key: 'customization', label: 'Personalizar', icon: Palette },
     { key: 'banking', label: 'Cuentas Bancarias', icon: Building2 },
     { key: 'paypal', label: 'PayPal', icon: CreditCard },

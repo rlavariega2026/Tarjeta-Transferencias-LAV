@@ -116,10 +116,10 @@ export const TemplatesCatalogView: React.FC<TemplatesCatalogViewProps> = ({
       {/* Encabezado */}
       <div>
         <h1 className="text-2xl font-display font-bold text-slate-100 tracking-tight">
-          Colección Premium: 10 Diseños Exclusivos
+          Colección Premium: 30 Diseños Exclusivos
         </h1>
         <p className="text-sm text-slate-400 mt-1">
-          Diez propuestas de diseño de alta gama. Selecciona «Premium Collection» para verlas juntas y probar cada composición antes de aplicarla.
+          Treinta propuestas de diseño de alta gama. Selecciona «Premium Collection» para verlas juntas y probar cada composición antes de aplicarla.
         </p>
       </div>
 

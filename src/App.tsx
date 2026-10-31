@@ -159,6 +159,7 @@ export default function App() {
           }
         ]
       },
+      wifi: { enabled:false, ssid:'', password:'' },
       paypal: {
         enabled: false,
         sectionTitle: 'Pago con Tarjeta o Saldo PayPal',
