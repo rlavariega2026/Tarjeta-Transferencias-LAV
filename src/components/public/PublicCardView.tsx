@@ -24,29 +24,29 @@ export const PublicCardView: React.FC<PublicCardViewProps> = ({
     loadCard();
   }, [slug]);
 
-  // La vista pública nunca debe mostrar controles administrativos ni metadatos internos.
-  // Se filtran por texto exacto para cubrir tarjetas antiguas y componentes heredados.
+  // Ocultar elementos internos que no pertenecen a una tarjeta pública.
   useEffect(() => {
-    const cleanPublicOnlyElements = () => {
-      document.querySelectorAll('a, button').forEach((element) => {
-        const label = (element.textContent || '').replace(/\\s+/g, ' ').trim();
-        if (/^Panel Admin$/i.test(label) || /^Link de Panel Admin$/i.test(label)) {
+    const cleanPublicCard = () => {
+      document.querySelectorAll('a, button, [role="button"]').forEach((element) => {
+        const label = (element.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+        if (label.includes('panel admin')) {
           element.remove();
         }
       });
 
       document.querySelectorAll('body *').forEach((element) => {
         if (element.children.length > 0) return;
-        const label = (element.textContent || '').replace(/\\s+/g, ' ').trim();
-        if (/^ID:\\s*.+\\s*[•·]\\s*LAV Digital Pagos$/i.test(label)) {
-          const container = element.closest('footer') || element.parentElement;
-          container?.remove();
+        const label = (element.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+        if (label.startsWith('id:') && label.includes('lav digital pagos')) {
+          const footer = element.closest('footer');
+          if (footer) footer.remove();
+          else element.parentElement?.remove();
         }
       });
     };
 
-    cleanPublicOnlyElements();
-    const observer = new MutationObserver(cleanPublicOnlyElements);
+    cleanPublicCard();
+    const observer = new MutationObserver(() => cleanPublicCard());
     observer.observe(document.body, { childList: true, subtree: true });
     return () => observer.disconnect();
   }, []);
