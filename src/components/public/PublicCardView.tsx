@@ -25,7 +25,7 @@ export const PublicCardView: React.FC<PublicCardViewProps> = ({
   useEffect(() => {
     const removeAdminArtifacts = () => {
       document.querySelectorAll('a, button, [role="button"]').forEach((element) => {
-        const label = (element.textContent || '').replace(/\\s+/g, ' ').trim().toLowerCase();
+        const label = (element.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
         if (label.includes('panel admin')) {
           element.remove();
         }
@@ -33,8 +33,8 @@ export const PublicCardView: React.FC<PublicCardViewProps> = ({
 
       document.querySelectorAll('body *').forEach((element) => {
         if (element.children.length > 0) return;
-        const label = (element.textContent || '').replace(/\\s+/g, ' ').trim();
-        if (/^ID:\\s*.*\\bLAV Digital Pagos$/i.test(label)) {
+        const label = (element.textContent || '').replace(/\s+/g, ' ').trim();
+        if (/^ID:\s*/i.test(label) || /^LAV Digital Pagos$/i.test(label)) {
           const container = element.closest('footer') || element.parentElement;
           container?.remove();
         }
