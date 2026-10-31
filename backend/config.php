@@ -23,7 +23,7 @@ define('DB_PASS', getenv('LAV_DB_PASS') ?: 'TuPasswordSeguro123!');
 define('DB_PORT', getenv('LAV_DB_PORT') ?: 3306);
 
 // Ruta base provisional en Hostinger
-define('BASE_URL', 'https://lavdigitalmkt.com/pagos-digitales/');
+define('BASE_URL', 'https://lavdigitalagency.com/Tarjetas-transferencias/');
 define('UPLOADS_DIR', __DIR__ . '/../uploads/');
 define('DATA_BACKUP_FILE', __DIR__ . '/cards_backup.json');
 
