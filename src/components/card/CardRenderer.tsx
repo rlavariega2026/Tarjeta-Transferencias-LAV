@@ -326,7 +326,7 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
 
   return (
     <div 
-      className={`w-full max-w-md mx-auto transition-all duration-300 relative ${
+      className={`premium-template premium-${templateId} w-full max-w-md mx-auto transition-all duration-300 relative ${
         viewMode === 'desktop' ? 'max-w-xl' : 'max-w-md'
       }`}
       style={{
@@ -340,10 +340,11 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
                     theme.fontFamily === 'display' ? "'Outfit', sans-serif" :
                     "'Plus Jakarta Sans', sans-serif"
       }}
+      data-template={templateId}
     >
       {/* Tarjeta Contenedora Principal */}
       <div 
-        className={`p-5 sm:p-7 rounded-3xl transition-all ${
+        className={`premium-card-shell p-5 sm:p-7 rounded-3xl transition-all ${
           templateId === 'neo-brutalist' 
             ? 'border-3 border-black shadow-[6px_6px_0px_#000000]' 
             : templateId === 'glassmorphism-aurora'
