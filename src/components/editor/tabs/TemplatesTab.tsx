@@ -14,12 +14,13 @@ export const TemplatesTab: React.FC<TemplatesTabProps> = ({
   onChange,
   onNotify
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
+  const [selectedCategory, setSelectedCategory] = useState<string>('Premium Collection');
 
-  const categories = ['Todos', 'Minimalismo & Lujo', 'Empresarial & Corporativo', 'Tecnología & Finanzas', 'Gastronomía & Hospitality', 'Retail & Comercio', 'Creativo & Moderno'];
+  const categories = ['Todos', 'Premium Collection', 'Minimalismo & Lujo', 'Empresarial & Corporativo', 'Tecnología & Finanzas', 'Gastronomía & Hospitality', 'Retail & Comercio', 'Creativo & Moderno'];
 
   const filteredTemplates = TEMPLATES_CATALOG.filter(t => {
     if (selectedCategory === 'Todos') return true;
+    if (selectedCategory === 'Premium Collection') return t.category === 'Premium Collection';
     return t.category.includes(selectedCategory) || selectedCategory.includes(t.category);
   });
 
@@ -47,10 +48,10 @@ export const TemplatesTab: React.FC<TemplatesTabProps> = ({
         <div>
           <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
             <Layout className="w-4 h-4 text-emerald-400" />
-            <span>36 Plantillas Comerciales + 10 Diseños Premium</span>
+            <span>20 Plantillas Comerciales + 10 Plantillas Premium</span>
           </h3>
           <p className="text-xs text-slate-400 mt-1">
-            Explora 10 diseños premium nuevos con acabados editoriales, metálicos y tecnológicos. Cambiar de plantilla conserva tus datos.
+            10 diseños de colección premium, con composiciones y acabados exclusivos. Tus datos se conservan al cambiar de diseño.
           </p>
         </div>
 
