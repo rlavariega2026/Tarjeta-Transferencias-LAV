@@ -24,33 +24,6 @@ export const PublicCardView: React.FC<PublicCardViewProps> = ({
     loadCard();
   }, [slug]);
 
-  // Ocultar elementos internos que no pertenecen a una tarjeta pública.
-  useEffect(() => {
-    const cleanPublicCard = () => {
-      document.querySelectorAll('a, button, [role="button"]').forEach((element) => {
-        const label = (element.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
-        if (label.includes('panel admin')) {
-          element.remove();
-        }
-      });
-
-      document.querySelectorAll('body *').forEach((element) => {
-        if (element.children.length > 0) return;
-        const label = (element.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
-        if (label.startsWith('id:') && label.includes('lav digital pagos')) {
-          const footer = element.closest('footer');
-          if (footer) footer.remove();
-          else element.parentElement?.remove();
-        }
-      });
-    };
-
-    cleanPublicCard();
-    const observer = new MutationObserver(() => cleanPublicCard());
-    observer.observe(document.body, { childList: true, subtree: true });
-    return () => observer.disconnect();
-  }, []);
-
   const loadCard = async () => {
     setLoading(true);
     setError(null);
