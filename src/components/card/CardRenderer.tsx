@@ -658,15 +658,14 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
           </div>
         )}
 
-        {/* Pie de la tarjeta: Información de validez y sello LAV */}
-        <div className="mt-6 pt-4 border-t border-black/10 dark:border-white/10 text-center">
-          <p className="text-[11px] opacity-60">
-            {card.publicNotes || 'Datos verificados directamente por el establecimiento.'}
-          </p>
-          <div className="mt-2 text-[10px] opacity-40 font-mono">
-            ID: {card.slug} • LAV Digital Pagos
+        {/* Pie de la tarjeta: información del establecimiento */}
+        {card.publicNotes && (
+          <div className="mt-6 pt-4 border-t border-black/10 dark:border-white/10 text-center">
+            <p className="text-[11px] opacity-60">
+              {card.publicNotes}
+            </p>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Modal / Sheet del Código QR para cobro en mostrador */}
