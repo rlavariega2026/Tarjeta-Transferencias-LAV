@@ -332,7 +332,7 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
       }`}
       style={{
         backgroundColor: theme.backgroundColor,
-        backgroundImage: theme.backgroundImage ? `linear-gradient(rgba(0,0,0,0.10), rgba(0,0,0,0.10)), url(${theme.backgroundImage})` : (theme.backgroundGradient || undefined),
+        backgroundImage: theme.backgroundImage ? `linear-gradient(rgba(0,0,0,0.10), rgba(0,0,0,0.10)), url(${theme.backgroundImage})` : undefined,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         color: theme.textColor,
@@ -354,7 +354,10 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
             : 'border border-black/10 dark:border-white/10 shadow-lg'
         }`}
         style={{
-          backgroundColor: theme.surfaceColor
+          backgroundColor: theme.surfaceColor,
+          backgroundImage: theme.backgroundImage ? `linear-gradient(rgba(0,0,0,0.10), rgba(0,0,0,0.10)), url(${theme.backgroundImage})` : (theme.backgroundGradient || undefined),
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
         }}
       >
         {/* Cabecera / Identidad del Negocio */}
@@ -585,7 +588,7 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
           {card.wifi.password&&renderCopyItem('Contraseña WiFi',card.wifi.password,'wifi_password',undefined,true,true)}
         </section>}
 
-        {/* MÓDULO 2: PAYPAL */
+        {/* MÓDULO 2: PAYPAL */}
         <div data-premium-section="paypal">
         {card.paypal.enabled && card.paypal.payUrl && (
           <div className="mb-6 p-4 rounded-2xl bg-gradient-to-br from-blue-950/20 via-sky-950/10 to-indigo-950/20 border border-blue-500/20">
