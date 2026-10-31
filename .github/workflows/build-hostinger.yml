@@ -8,6 +8,11 @@ on:
 permissions:
   contents: read
 
+# Evitar despliegues FTP simultáneos que puedan sobrescribirse entre sí.
+concurrency:
+  group: hostinger-tarjetas-transferencias
+  cancel-in-progress: true
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
