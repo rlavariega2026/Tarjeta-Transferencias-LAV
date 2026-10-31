@@ -34,6 +34,16 @@ export const PublicCardView: React.FC<PublicCardViewProps> = ({
       document.querySelectorAll('body *').forEach((element) => {
         if (element.children.length > 0) return;
         const label = (element.textContent || '').replace(/\s+/g, ' ').trim();
+        const normalized = label.toLowerCase();
+
+        // El enlace puede estar montado como un div/span con evento, no solo como <a> o <button>.
+        if (normalized.includes('panel admin')) {
+          const clickable = element.closest('a, button, [role="button"]');
+          (clickable || element.parentElement || element).remove();
+          return;
+        }
+
+        // No mostrar el identificador interno ni la marca técnica en la tarjeta pública.
         if (/^ID:\s*/i.test(label) || /^LAV Digital Pagos$/i.test(label)) {
           const container = element.closest('footer') || element.parentElement;
           container?.remove();
