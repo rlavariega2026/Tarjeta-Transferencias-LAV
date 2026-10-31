@@ -39,3 +39,51 @@
   font-family: 'JetBrains Mono', monospace;
   font-variant-numeric: tabular-nums;
 }
+
+
+/* LAV PREMIUM COLLECTION — diez composiciones visuales diferenciadas */
+.premium-template { isolation:isolate; overflow:hidden; border-radius:28px; }
+.premium-template .premium-card-shell { position:relative; overflow:hidden; }
+.premium-template .premium-card-shell::before { content:""; position:absolute; inset:0 0 auto; height:5px; background:var(--premium-accent); opacity:.95; pointer-events:none; }
+.premium-template .premium-card-shell > * { position:relative; z-index:1; }
+.premium-template h1 { letter-spacing:-.045em; }
+.premium-template h2 { letter-spacing:.12em; }
+.premium-template button, .premium-template a { transition:transform .22s ease, filter .22s ease, box-shadow .22s ease; }
+.premium-template button:hover, .premium-template a:hover { filter:brightness(1.06); }
+.premium-template .premium-card-shell { box-shadow:0 24px 70px rgba(0,0,0,.16); }
+.premium-template[data-template="obsidian-gold"] .premium-card-shell { border:1px solid rgba(201,164,92,.62)!important; background:radial-gradient(ellipse at 50% -12%,rgba(201,164,92,.22),transparent 48%),linear-gradient(145deg,#191a1c,#090b10 62%)!important; }
+.premium-template[data-template="obsidian-gold"] .premium-card-shell::before { height:7px;background:linear-gradient(90deg,#6c5129,#f5df9a,#a77b37,#f5df9a,#6c5129); }
+.premium-template[data-template="obsidian-gold"] h1 { color:#f6e7c2!important;font-family:Georgia,serif;font-weight:500!important;letter-spacing:.015em; }
+.premium-template[data-template="obsidian-gold"] .premium-card-shell button[title^="Copiar"] { border:1px solid rgba(201,164,92,.35); }
+.premium-template[data-template="ivory-editorial"] .premium-card-shell { border:1px solid #d8d0c2!important;border-radius:4px!important;background:linear-gradient(135deg,#fffdf8,#f0ebe1)!important; }
+.premium-template[data-template="ivory-editorial"] .premium-card-shell::before { height:3px;background:#252525; }
+.premium-template[data-template="ivory-editorial"] h1 { font-family:Georgia,serif;font-weight:400!important;font-size:2rem!important;letter-spacing:-.06em; }
+.premium-template[data-template="ivory-editorial"] .premium-card-shell h2 { border-bottom:1px solid #c9c0b2;padding-bottom:12px; }
+.premium-template[data-template="sapphire-executive"] .premium-card-shell { border:1px solid rgba(156,199,239,.55)!important;background:radial-gradient(circle at 90% 0,rgba(37,99,166,.5),transparent 36%),linear-gradient(150deg,#102945,#07182c 70%)!important; }
+.premium-template[data-template="sapphire-executive"] .premium-card-shell::before { background:linear-gradient(90deg,#2563a6,#d9edff,#2563a6);height:4px; }
+.premium-template[data-template="sapphire-executive"] h1 { color:#f2f7ff!important;font-weight:650!important; }
+.premium-template[data-template="sapphire-executive"] .premium-card-shell button { border-radius:12px; }
+.premium-template[data-template="emerald-atelier"] .premium-card-shell { border:1px solid rgba(215,189,131,.48)!important;background:radial-gradient(ellipse at 50% 0,rgba(13,139,112,.25),transparent 52%),linear-gradient(155deg,#102b25,#071d19)!important; }
+.premium-template[data-template="emerald-atelier"] .premium-card-shell::before { background:linear-gradient(90deg,#765b36,#f0dca7,#765b36);height:4px; }
+.premium-template[data-template="emerald-atelier"] h1 { color:#f4e8c9!important;font-family:Georgia,serif;font-weight:500!important; }
+.premium-template[data-template="rose-champagne-premium"] .premium-card-shell { border:1px solid #e5c7c0!important;background:radial-gradient(circle at 100% 0,rgba(184,117,131,.16),transparent 42%),linear-gradient(145deg,#fffaf8,#f8ece9)!important; }
+.premium-template[data-template="rose-champagne-premium"] .premium-card-shell::before { background:linear-gradient(90deg,#b87583,#f3d8c9,#c49a75);height:5px; }
+.premium-template[data-template="rose-champagne-premium"] h1 { color:#593541!important;font-family:Georgia,serif;font-weight:500!important; }
+.premium-template[data-template="rose-champagne-premium"] .premium-card-shell button { border-radius:999px; }
+.premium-template[data-template="midnight-cobalt"] .premium-card-shell { border:1px solid rgba(71,123,255,.52)!important;background:radial-gradient(circle at 12% 0,rgba(71,123,255,.28),transparent 38%),linear-gradient(145deg,#111b35,#080e20)!important; }
+.premium-template[data-template="midnight-cobalt"] .premium-card-shell::before { background:linear-gradient(90deg,#477bff,#83c5ff,#477bff);height:4px; }
+.premium-template[data-template="midnight-cobalt"] h1 { color:#f1f5ff!important;font-weight:700!important; }
+.premium-template[data-template="pearl-minimal"] .premium-card-shell { border:1px solid #d9dfe2!important;background:linear-gradient(145deg,#fff,#f1f3f4)!important;box-shadow:0 20px 55px rgba(32,40,50,.1)!important; }
+.premium-template[data-template="pearl-minimal"] .premium-card-shell::before { background:linear-gradient(90deg,#64748b,#d4c9b2,#64748b);height:3px; }
+.premium-template[data-template="pearl-minimal"] h1 { color:#202832!important;font-weight:600!important; }
+.premium-template[data-template="amethyst-glass"] .premium-card-shell { border:1px solid rgba(226,182,255,.42)!important;background:radial-gradient(circle at 10% 0,rgba(152,117,237,.34),transparent 42%),linear-gradient(145deg,rgba(35,25,58,.94),rgba(16,13,32,.98))!important;backdrop-filter:blur(22px); }
+.premium-template[data-template="amethyst-glass"] .premium-card-shell::before { background:linear-gradient(90deg,#9875ed,#f3d8ff,#9875ed);height:5px; }
+.premium-template[data-template="amethyst-glass"] h1 { color:#fff!important;font-weight:600!important; }
+.premium-template[data-template="copper-heritage"] .premium-card-shell { border:1px solid rgba(214,164,124,.55)!important;background:radial-gradient(ellipse at 50% 0,rgba(169,101,63,.28),transparent 48%),linear-gradient(145deg,#30211b,#211712)!important; }
+.premium-template[data-template="copper-heritage"] .premium-card-shell::before { background:linear-gradient(90deg,#75412b,#e4b58e,#9d5e3d);height:5px; }
+.premium-template[data-template="copper-heritage"] h1 { color:#f8e9db!important;font-family:Georgia,serif;font-weight:500!important; }
+.premium-template[data-template="onyx-carbon"] .premium-card-shell { border:1px solid rgba(174,185,200,.42)!important;background:linear-gradient(145deg,#1b2632,#0b1017 65%)!important; }
+.premium-template[data-template="onyx-carbon"] .premium-card-shell::before { background:linear-gradient(90deg,#536779,#c7d2df,#65d5d0,#536779);height:4px; }
+.premium-template[data-template="onyx-carbon"] h1 { color:#f1f5f9!important;font-family:ui-monospace,monospace;font-weight:600!important;letter-spacing:-.035em; }
+.premium-template[data-template="onyx-carbon"] .premium-card-shell button { border-radius:10px; }
+@media (max-width:480px) { .premium-template { border-radius:22px; } .premium-template .premium-card-shell { padding:20px!important; } }
