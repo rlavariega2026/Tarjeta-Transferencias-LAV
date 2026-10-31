@@ -275,17 +275,25 @@ export async function uploadLogo(file: File): Promise<{ url: string }> {
  */
 export function getCardPublicUrl(slug: string, overrideBaseUrl?: string): string {
   const settings = getHostingerSettings();
-  const base = overrideBaseUrl || settings.baseUrl || window.location.origin;
-  const cleanBase = base.endsWith('/') ? base : `${base}/`;
-  
-  // Formato limpio compatible con el router y con .htaccess en Hostinger
-  // Puede ser: https://lavdigitalmkt.com/pagos-digitales/?card=slug o /t/slug
-  if (base.includes('/Tarjetas-transferencias') || base.includes('lavdigitalagency.com')) {
+  const configuredBase = overrideBaseUrl || settings.baseUrl || window.location.origin;
+  const currentOrigin = window.location.origin;
+
+  // En producción, todas las tarjetas deben abrir directamente la vista pública,
+  // nunca la raíz de administración ni una URL guardada anteriormente en el navegador.
+  let publicBase = configuredBase;
+  if (currentOrigin.includes('lavdigitalagency.com')) {
+    publicBase = `${currentOrigin}/Tarjetas-transferencias/`;
+  } else if (configuredBase.includes('lavdigitalagency.com')) {
+    publicBase = 'https://lavdigitalagency.com/Tarjetas-transferencias/';
+  }
+
+  const cleanBase = publicBase.endsWith('/') ? publicBase : `${publicBase}/`;
+  if (publicBase.includes('/Tarjetas-transferencias') || publicBase.includes('lavdigitalagency.com')) {
     return `${cleanBase}t/${encodeURIComponent(slug)}`;
   }
-  
+
   // En AI Studio o preview local:
-  return `${window.location.origin}/?card=${encodeURIComponent(slug)}`;
+  return `${currentOrigin}/?card=${encodeURIComponent(slug)}`;
 }
 
 /**
