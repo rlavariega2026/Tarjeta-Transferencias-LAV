@@ -63,7 +63,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp
           port: 21
-          server-dir: ./Tarjetas-transferencias/
+          server-dir: public_html/Tarjetas-transferencias/
           local-dir: ./deploy/
           exclude: |
             **/.git*
