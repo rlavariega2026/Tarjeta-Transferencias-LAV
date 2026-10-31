@@ -584,7 +584,7 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
         {/* MÓDULO WIFI */}
         {card.wifi?.enabled&&(card.wifi.ssid||card.wifi.password)&&<section className="mb-6 p-4 rounded-2xl border border-cyan-500/20 bg-cyan-500/5">
           <h2 className="text-xs font-bold uppercase tracking-wider opacity-80 flex items-center gap-2 mb-3"><Wifi className="w-4 h-4 text-cyan-500"/><span>Conexión WiFi</span></h2>
-          {card.wifi.ssid&&<div className="mb-3 p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10"><span className="text-[11px] font-semibold uppercase tracking-wider block opacity-70">Nombre de la red (SSID)</span><span className="text-sm font-medium break-all block mt-0.5">{card.wifi.ssid}</span></div>}
+          {card.wifi.ssid&&<div className="mb-3">{renderCopyItem('Nombre de la red (SSID)',card.wifi.ssid,'wifi_ssid',undefined,false,false)}</div>}
           {card.wifi.password&&renderCopyItem('Contraseña WiFi',card.wifi.password,'wifi_password',undefined,true,true)}
         </section>}
 
