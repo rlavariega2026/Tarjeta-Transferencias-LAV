@@ -115,7 +115,7 @@ export const TemplatesCatalogView: React.FC<TemplatesCatalogViewProps> = ({
       {/* Encabezado */}
       <div>
         <h1 className="text-2xl font-display font-bold text-slate-100 tracking-tight">
-          Catálogo Oficial de 26 Plantillas Comerciales
+          Catálogo Oficial de 20 Plantillas Comerciales
         </h1>
         <p className="text-sm text-slate-400 mt-1">
           Cada diseño responde a un giro comercial específico con estructura visual, tipografía y estilo adaptados para máxima conversión.
@@ -139,7 +139,7 @@ export const TemplatesCatalogView: React.FC<TemplatesCatalogViewProps> = ({
         ))}
       </div>
 
-      {/* Layout de Catálogo: Izquierda Lista de 26 Plantillas, Derecha Vista Previa Flotante */}
+      {/* Layout de Catálogo: Izquierda Lista de 20 Plantillas, Derecha Vista Previa Flotante */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Lista de Plantillas (7 columnas) */}
         <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
