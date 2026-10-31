@@ -87,3 +87,46 @@
 .premium-template[data-template="onyx-carbon"] h1 { color:#f1f5f9!important;font-family:ui-monospace,monospace;font-weight:600!important;letter-spacing:-.035em; }
 .premium-template[data-template="onyx-carbon"] .premium-card-shell button { border-radius:10px; }
 @media (max-width:480px) { .premium-template { border-radius:22px; } .premium-template .premium-card-shell { padding:20px!important; } }
+
+
+/* PREMIUM V2 — composiciones por módulos, no solo cambios de paleta */
+.premium-template [data-premium-section="brand"] { position:relative; padding:30px 20px 24px; margin:-28px -28px 24px; border-radius:24px 24px 18px 18px; }
+.premium-template [data-premium-section="quick-actions"] { margin-bottom:22px; }
+.premium-template [data-premium-section="banking"] { padding:18px; border-radius:18px; margin-bottom:18px; }
+.premium-template [data-premium-section="paypal"],.premium-template [data-premium-section="reviews"] { border-radius:18px; overflow:hidden; }
+.premium-template [data-premium-section="whatsapp"] { margin-top:18px; }
+.premium-template [data-premium-section="brand"] h1 { font-size:clamp(1.5rem,5vw,2rem)!important; line-height:1.08!important; }
+.premium-template [data-premium-section="banking"] [title^="Copiar"] { border-radius:10px; font-size:10px; letter-spacing:.02em; }
+.premium-template [data-premium-section="quick-actions"] button { min-height:44px; }
+.premium-template[data-template="obsidian-gold"] [data-premium-section="brand"] { background:radial-gradient(ellipse at 50% 0,rgba(235,199,120,.18),transparent 70%); border-bottom:1px solid rgba(201,164,92,.35); }
+.premium-template[data-template="obsidian-gold"] [data-premium-section="banking"] { background:linear-gradient(145deg,rgba(201,164,92,.12),rgba(255,255,255,.015)); border:1px solid rgba(201,164,92,.3); }
+.premium-template[data-template="obsidian-gold"] [data-premium-section="paypal"] { border:1px solid rgba(201,164,92,.35); }
+.premium-template[data-template="ivory-editorial"] [data-premium-section="brand"] { margin:-28px -28px 24px; background:#e9e2d6; border-bottom:1px solid #cfc4b4; }
+.premium-template[data-template="ivory-editorial"] [data-premium-section="brand"] h1 { font-size:2.2rem!important; }
+.premium-template[data-template="ivory-editorial"] [data-premium-section="banking"] { border-top:1px solid #b8aa98;border-bottom:1px solid #b8aa98;border-radius:0;background:transparent; }
+.premium-template[data-template="ivory-editorial"] [data-premium-section="quick-actions"] button { border-radius:3px!important; }
+.premium-template[data-template="sapphire-executive"] [data-premium-section="brand"] { background:linear-gradient(120deg,rgba(37,99,166,.36),transparent 75%);border-bottom:1px solid rgba(156,199,239,.35); }
+.premium-template[data-template="sapphire-executive"] [data-premium-section="banking"] { background:rgba(156,199,239,.07);border:1px solid rgba(156,199,239,.25); }
+.premium-template[data-template="sapphire-executive"] [data-premium-section="quick-actions"] button { border-radius:10px!important; }
+.premium-template[data-template="emerald-atelier"] [data-premium-section="brand"] { background:radial-gradient(ellipse at 50% 0,rgba(13,139,112,.32),transparent 72%);border-bottom:1px solid rgba(215,189,131,.4); }
+.premium-template[data-template="emerald-atelier"] [data-premium-section="banking"] { background:rgba(215,189,131,.07);border:1px solid rgba(215,189,131,.3); }
+.premium-template[data-template="emerald-atelier"] [data-premium-section="banking"] h2 { color:#e1c991; }
+.premium-template[data-template="rose-champagne-premium"] [data-premium-section="brand"] { background:linear-gradient(145deg,#f1dfda,#fffaf8);border-bottom:1px solid #dfc1ba; }
+.premium-template[data-template="rose-champagne-premium"] [data-premium-section="banking"] { background:#fffaf8;border:1px solid #ead7d2;box-shadow:0 12px 28px rgba(113,67,77,.08); }
+.premium-template[data-template="rose-champagne-premium"] [data-premium-section="quick-actions"] button { border-radius:999px!important; }
+.premium-template[data-template="midnight-cobalt"] [data-premium-section="brand"] { background:radial-gradient(ellipse at 50% 0,rgba(71,123,255,.36),transparent 72%);border-bottom:1px solid rgba(131,197,255,.3); }
+.premium-template[data-template="midnight-cobalt"] [data-premium-section="banking"] { background:linear-gradient(135deg,rgba(71,123,255,.14),rgba(17,27,53,.5));border:1px solid rgba(71,123,255,.32); }
+.premium-template[data-template="midnight-cobalt"] [data-premium-section="quick-actions"] button { border-radius:10px!important; }
+.premium-template[data-template="pearl-minimal"] [data-premium-section="brand"] { background:linear-gradient(180deg,#fff,#e8ecee);border-bottom:1px solid #d5dce0; }
+.premium-template[data-template="pearl-minimal"] [data-premium-section="banking"] { background:#fff;border:1px solid #dce2e5;box-shadow:0 10px 24px rgba(35,52,65,.06); }
+.premium-template[data-template="pearl-minimal"] [data-premium-section="quick-actions"] button { border-radius:14px!important;background:#e8ecee!important;color:#202832!important; }
+.premium-template[data-template="amethyst-glass"] [data-premium-section="brand"] { background:linear-gradient(145deg,rgba(152,117,237,.24),rgba(35,25,58,.12));border-bottom:1px solid rgba(226,182,255,.3);backdrop-filter:blur(18px); }
+.premium-template[data-template="amethyst-glass"] [data-premium-section="banking"] { background:rgba(255,255,255,.055);border:1px solid rgba(226,182,255,.28);backdrop-filter:blur(16px); }
+.premium-template[data-template="amethyst-glass"] [data-premium-section="quick-actions"] button { background:rgba(152,117,237,.2)!important;border-color:rgba(226,182,255,.25)!important;color:#fff!important; }
+.premium-template[data-template="copper-heritage"] [data-premium-section="brand"] { background:radial-gradient(ellipse at 50% 0,rgba(169,101,63,.36),transparent 72%);border-bottom:1px solid rgba(214,164,124,.38); }
+.premium-template[data-template="copper-heritage"] [data-premium-section="banking"] { background:rgba(214,164,124,.08);border:1px solid rgba(214,164,124,.28); }
+.premium-template[data-template="copper-heritage"] [data-premium-section="banking"] h2 { color:#e5b28e; }
+.premium-template[data-template="onyx-carbon"] [data-premium-section="brand"] { background:linear-gradient(135deg,rgba(101,213,208,.12),rgba(174,185,200,.04));border-bottom:1px solid rgba(174,185,200,.26); }
+.premium-template[data-template="onyx-carbon"] [data-premium-section="banking"] { background:rgba(174,185,200,.055);border:1px solid rgba(101,213,208,.22); }
+.premium-template[data-template="onyx-carbon"] [data-premium-section="banking"] [title^="Copiar"] { border-radius:7px; }
+@media(max-width:480px){.premium-template [data-premium-section="brand"]{margin:-20px -20px 20px;padding:24px 14px 20px}.premium-template [data-premium-section="banking"]{padding:14px}}
