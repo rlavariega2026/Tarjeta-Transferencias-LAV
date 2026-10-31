@@ -360,6 +360,7 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
         }}
       >
         {/* Cabecera / Identidad del Negocio */}
+        <div data-premium-section="brand">
         <div className="mb-6">
           {renderLogo()}
 
@@ -408,7 +409,9 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
           )}
         </div>
 
+                </div>
         {/* Acciones Rápidas Superiores: QR y Compartir */}
+        <div data-premium-section="quick-actions">
         <div className="flex items-center gap-2 mb-6">
           <button
             onClick={handleOpenQrModal}
@@ -435,7 +438,9 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
           </button>
         </div>
 
+                </div>
         {/* MÓDULO 1: TRANSFERENCIAS BANCARIAS */}
+        <div data-premium-section="banking">
         {card.banking.enabled && card.banking.accounts.length > 0 && (
           <div className="mb-6">
             <div className="flex items-center justify-between mb-3">
@@ -574,7 +579,9 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
           </div>
         )}
 
+                </div>
         {/* MÓDULO 2: PAYPAL */}
+        <div data-premium-section="paypal">
         {card.paypal.enabled && card.paypal.payUrl && (
           <div className="mb-6 p-4 rounded-2xl bg-gradient-to-br from-blue-950/20 via-sky-950/10 to-indigo-950/20 border border-blue-500/20">
             <div className="flex items-center justify-between mb-2">
@@ -615,7 +622,9 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
           </div>
         )}
 
+                </div>
         {/* MÓDULO 3: CALIFICACIÓN EN GOOGLE */}
+        <div data-premium-section="reviews">
         {card.googleReview.enabled && card.googleReview.reviewUrl && (
           <div className="mb-6 p-4 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-center">
             <div className="flex items-center justify-center gap-1 mb-2 text-amber-400">
@@ -648,7 +657,9 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
           </div>
         )}
 
+                </div>
         {/* MÓDULO 4: BOTÓN DE CONFIRMACIÓN POR WHATSAPP */}
+        <div data-premium-section="whatsapp">
         {card.whatsapp.enabled && card.whatsapp.phoneNumber && (
           <div className="mb-4">
             <button
@@ -661,6 +672,7 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
           </div>
         )}
 
+                </div>
         {/* Pie de la tarjeta: información del establecimiento */}
         {card.publicNotes && !(isPublicView && /^ID:\s*.+\s*•\s*LAV Digital Pagos$/i.test(card.publicNotes.trim())) && (
           <div className="mt-6 pt-4 border-t border-black/10 dark:border-white/10 text-center">
