@@ -21,7 +21,13 @@ export default function App() {
   const [activeCard, setActiveCard] = useState<PaymentCard | null>(null);
   const [currentView, setCurrentView] = useState<'dashboard' | 'editor' | 'templates' | 'hostinger'>('dashboard');
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
-  const [publicCardSlug, setPublicCardSlug] = useState<string | null>(null);
+  const [publicCardSlug, setPublicCardSlug] = useState<string | null>(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const cardParam = urlParams.get('card');
+    if (cardParam) return cardParam;
+    const match = window.location.pathname.match(/\\/(?:t|pagos)\\/([a-zA-Z0-9_-]+)/);
+    return match?.[1] || null;
+  });
   const [loading, setLoading] = useState<boolean>(true);
 
   // Registro del Service Worker para PWA y soporte offline
