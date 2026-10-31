@@ -661,7 +661,7 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
         )}
 
         {/* Pie de la tarjeta: información del establecimiento */}
-        {card.publicNotes && !(isPublicView && card.publicNotes.trim() === `ID: ${card.slug} • LAV Digital Pagos`) && (
+        {card.publicNotes && !(isPublicView && /^ID:\s*.+\s*•\s*LAV Digital Pagos$/i.test(card.publicNotes.trim())) && (
           <div className="mt-6 pt-4 border-t border-black/10 dark:border-white/10 text-center">
             <p className="text-[11px] opacity-60">
               {card.publicNotes}
