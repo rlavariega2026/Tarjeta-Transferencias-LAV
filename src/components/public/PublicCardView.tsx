@@ -119,6 +119,7 @@ export const PublicCardView: React.FC<PublicCardViewProps> = ({
           isInteractive={true}
           onNotify={onNotify}
           viewMode="mobile"
+          isPublicView={true}
         />
       </main>
 
