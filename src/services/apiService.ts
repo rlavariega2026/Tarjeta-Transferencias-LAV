@@ -13,7 +13,7 @@ export interface HostingerSettings {
 }
 
 export const DEFAULT_HOSTINGER_SETTINGS: HostingerSettings = {
-  baseUrl: `${window.location.origin}/Tarjetas-transferencias/`,
+  baseUrl: 'https://lavdigitalagency.com/Tarjetas-transferencias/',
   apiEndpoint: `${import.meta.env.BASE_URL}api`,
   useRemoteApi: false
 };
@@ -22,10 +22,18 @@ export function getHostingerSettings(): HostingerSettings {
   try {
     const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
     if (raw) {
-      return { ...DEFAULT_HOSTINGER_SETTINGS, ...JSON.parse(raw) };
+      const saved = JSON.parse(raw);
+      const merged = { ...DEFAULT_HOSTINGER_SETTINGS, ...saved };
+      if (['lavdigitalagency.com', 'www.lavdigitalagency.com'].includes(window.location.hostname.toLowerCase())) {
+        return { ...merged, baseUrl: 'https://lavdigitalagency.com/Tarjetas-transferencias/', apiEndpoint: `${import.meta.env.BASE_URL}api` };
+      }
+      return merged;
     }
   } catch (e) {
     console.error('Error reading hostinger settings:', e);
+  }
+  if (['lavdigitalagency.com', 'www.lavdigitalagency.com'].includes(window.location.hostname.toLowerCase())) {
+    return { ...DEFAULT_HOSTINGER_SETTINGS, baseUrl: 'https://lavdigitalagency.com/Tarjetas-transferencias/', apiEndpoint: `${import.meta.env.BASE_URL}api` };
   }
   return DEFAULT_HOSTINGER_SETTINGS;
 }
