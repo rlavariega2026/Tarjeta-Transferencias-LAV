@@ -585,7 +585,7 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
           {card.wifi.password&&renderCopyItem('Contraseña WiFi',card.wifi.password,'wifi_password',undefined,true,true)}
         </section>}
 
-        {/* MÓDULO 2: PAYPAL */
+        {/* MÓDULO 2: PAYPAL */}
         <div data-premium-section="paypal">
         {card.paypal.enabled && card.paypal.payUrl && (
           <div className="mb-6 p-4 rounded-2xl bg-gradient-to-br from-blue-950/20 via-sky-950/10 to-indigo-950/20 border border-blue-500/20">
