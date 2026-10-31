@@ -26,8 +26,13 @@ export default function App() {
   // Registro del Service Worker para PWA y soporte offline
   useEffect(() => {
     if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
-      navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).catch((err) => {
-        console.warn('Service worker registration failed:', err);
+      navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`, {
+        updateViaCache: 'none'
+      }).then((registration) => {
+        // Solicitar la versión más reciente del Service Worker en cada visita.
+        return registration.update();
+      }).catch((err) => {
+        console.warn('Service worker registration/update failed:', err);
       });
     }
   }, []);
