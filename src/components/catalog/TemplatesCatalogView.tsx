@@ -13,13 +13,14 @@ export const TemplatesCatalogView: React.FC<TemplatesCatalogViewProps> = ({
   onSelectTemplateToCreate,
   onNotify
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
+  const [selectedCategory, setSelectedCategory] = useState<string>('Premium Collection');
   const [previewTemplateId, setPreviewTemplateId] = useState<string>(TEMPLATES_CATALOG[0].id);
 
-  const categories = ['Todos', 'Minimalismo & Lujo', 'Empresarial & Corporativo', 'Tecnología & Finanzas', 'Gastronomía & Hospitality', 'Retail & Comercio', 'Creativo & Moderno'];
+  const categories = ['Todos', 'Premium Collection', 'Minimalismo & Lujo', 'Empresarial & Corporativo', 'Tecnología & Finanzas', 'Gastronomía & Hospitality', 'Retail & Comercio', 'Creativo & Moderno'];
 
   const filtered = TEMPLATES_CATALOG.filter(t => {
     if (selectedCategory === 'Todos') return true;
+    if (selectedCategory === 'Premium Collection') return t.category === 'Premium Collection';
     return t.category.includes(selectedCategory) || selectedCategory.includes(t.category);
   });
 
@@ -115,10 +116,10 @@ export const TemplatesCatalogView: React.FC<TemplatesCatalogViewProps> = ({
       {/* Encabezado */}
       <div>
         <h1 className="text-2xl font-display font-bold text-slate-100 tracking-tight">
-          Catálogo Oficial de 20 Plantillas Comerciales
+          Colección Premium: 10 Diseños Exclusivos
         </h1>
         <p className="text-sm text-slate-400 mt-1">
-          Cada diseño responde a un giro comercial específico con estructura visual, tipografía y estilo adaptados para máxima conversión.
+          Diez propuestas de diseño de alta gama. Selecciona «Premium Collection» para verlas juntas y probar cada composición antes de aplicarla.
         </p>
       </div>
 
@@ -139,9 +140,9 @@ export const TemplatesCatalogView: React.FC<TemplatesCatalogViewProps> = ({
         ))}
       </div>
 
-      {/* Layout de Catálogo: Izquierda Lista de 20 Plantillas, Derecha Vista Previa Flotante */}
+      {/* Layout de Catálogo: Izquierda Lista de Plantillas, Derecha Vista Previa */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Lista de Plantillas (7 columnas) */}
+        {/* Colección de Plantillas (7 columnas) */}
         <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {filtered.map((tmpl) => {
             const isSelected = tmpl.id === previewTemplateId;
@@ -196,7 +197,7 @@ export const TemplatesCatalogView: React.FC<TemplatesCatalogViewProps> = ({
           })}
         </div>
 
-        {/* Vista Previa Interactiva de la Plantilla Seleccionada (5 columnas) */}
+        {/* Vista Previa Interactiva (5 columnas) */}
         <div className="lg:col-span-5 sticky top-24 space-y-4">
           <div className="bg-slate-900/70 border border-slate-800 rounded-3xl p-4 shadow-xl">
             <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
