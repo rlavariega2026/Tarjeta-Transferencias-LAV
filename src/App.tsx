@@ -25,7 +25,7 @@ export default function App() {
     const urlParams = new URLSearchParams(window.location.search);
     const cardParam = urlParams.get('card');
     if (cardParam) return cardParam;
-    const match = window.location.pathname.match(/\\/(?:t|pagos)\\/([a-zA-Z0-9_-]+)/);
+    const match = window.location.pathname.match(/\/(?:t|pagos)\/([a-zA-Z0-9_-]+)/);
     return match?.[1] || null;
   });
   const [loading, setLoading] = useState<boolean>(true);
