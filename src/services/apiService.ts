@@ -7,8 +7,8 @@ const LOCAL_STORAGE_KEY = 'lav_pagos_cards_v1';
 const SETTINGS_STORAGE_KEY = 'lav_pagos_hostinger_settings';
 
 export interface HostingerSettings {
-  baseUrl: string; // e.g. "https://lavdigitalmkt.com/pagos-digitales/"
-  apiEndpoint: string; // e.g. "https://lavdigitalmkt.com/pagos-digitales/api"
+  baseUrl: string; // URL pública de esta instalación
+  apiEndpoint: string; // Endpoint API relativo a esta instalación
   useRemoteApi: boolean;
 }
 
@@ -289,9 +289,7 @@ export function getCardPublicUrl(slug: string, overrideBaseUrl?: string): string
   // En producción, todas las tarjetas deben abrir directamente la vista pública,
   // nunca la raíz de administración ni una URL guardada anteriormente en el navegador.
   let publicBase = configuredBase;
-  if (currentOrigin.includes('lavdigitalagency.com')) {
-    publicBase = `${currentOrigin}/Tarjetas-transferencias/`;
-  } else if (configuredBase.includes('lavdigitalagency.com')) {
+  if (['lavdigitalagency.com', 'www.lavdigitalagency.com'].includes(window.location.hostname.toLowerCase())) {
     publicBase = 'https://lavdigitalagency.com/Tarjetas-transferencias/';
   }
 
