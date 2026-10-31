@@ -1,6 +1,6 @@
 // Service Worker for LAV Digital Pagos
 // Bump this value whenever a new frontend version is deployed.
-const CACHE_NAME = 'lav-pagos-hostinger-v3';
+const CACHE_NAME = 'lav-pagos-hostinger-v4';
 const STATIC_ASSETS = [
   './',
   './index.html',
