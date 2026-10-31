@@ -30,6 +30,7 @@ interface CardRendererProps {
   onNotify?: (title: string, desc?: string, type?: 'success' | 'error' | 'info') => void;
   viewMode?: 'mobile' | 'desktop';
   overrideBaseUrl?: string;
+  isPublicView?: boolean;
 }
 
 export const CardRenderer: React.FC<CardRendererProps> = ({
@@ -37,7 +38,8 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
   isInteractive = true,
   onNotify,
   viewMode = 'mobile',
-  overrideBaseUrl
+  overrideBaseUrl,
+  isPublicView = false
 }) => {
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [activeAccountTab, setActiveAccountTab] = useState<number>(0);
@@ -659,7 +661,7 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
         )}
 
         {/* Pie de la tarjeta: información del establecimiento */}
-        {card.publicNotes && (
+        {card.publicNotes && !(isPublicView && card.publicNotes.trim() === `ID: ${card.slug} • LAV Digital Pagos`) && (
           <div className="mt-6 pt-4 border-t border-black/10 dark:border-white/10 text-center">
             <p className="text-[11px] opacity-60">
               {card.publicNotes}
