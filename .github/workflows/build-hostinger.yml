@@ -34,12 +34,18 @@ jobs:
           test -f deploy/index.html
           test -f deploy/.htaccess
           test -f deploy/manifest.json
+          cd deploy
+          zip -qr ../Tarjetas-transferencias-Hostinger.zip .
+          cd ..
+          test -s Tarjetas-transferencias-Hostinger.zip
 
       - name: Upload deployable package
         uses: actions/upload-artifact@v4
         with:
           name: Tarjetas-transferencias-Hostinger
-          path: deploy/
+          path: |
+            deploy/
+            Tarjetas-transferencias-Hostinger.zip
           if-no-files-found: error
           retention-days: 14
           include-hidden-files: true
