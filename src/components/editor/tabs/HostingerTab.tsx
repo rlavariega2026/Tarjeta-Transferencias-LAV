@@ -67,7 +67,7 @@ export const HostingerTab: React.FC<HostingerTabProps> = ({ onNotify }) => {
   const configPhpCode = `<?php
 /**
  * LAV Digital Pagos - Configuración de Base de Datos para Hostinger
- * Ubicación en Hostinger: /public_html/pagos-digitales/backend/config.php
+ * Ubicación en Hostinger: /public_html/Tarjetas-transferencias/backend/config.php
  */
 
 header("Access-Control-Allow-Origin: *");
@@ -87,7 +87,7 @@ define('DB_PASS', 'TuPasswordSeguro123!');     // Tu contraseña configurada
 define('DB_PORT', 3306);
 
 // URL Base pública en tu dominio
-define('BASE_URL', '${settings.baseUrl || 'https://lavdigitalmkt.com/pagos-digitales/'}');
+define('BASE_URL', '${settings.baseUrl || 'https://lavdigitalagency.com/Tarjetas-transferencias/'}');
 define('UPLOADS_DIR', __DIR__ . '/../uploads/');
 define('DATA_BACKUP_FILE', __DIR__ . '/cards_backup.json');
 
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS \`payment_cards\` (
   const htaccessCode = `# LAV Digital Pagos - Apache Rewrite Rules para Hostinger
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /pagos-digitales/
+    RewriteBase /Tarjetas-transferencias/
 
     # Rutas limpias de tarjetas con OpenGraph en servidor para WhatsApp
     RewriteRule ^t/([a-zA-Z0-9_-]+)/?$ backend/card.php?slug=$1 [L,QSA]
@@ -208,18 +208,18 @@ Abre \`backend/config.php\` y coloca el nombre de tu base de datos, usuario y co
 
 ## 4. Subir Archivos a Hostinger File Manager
 Sube la carpeta del proyecto a:
-\`/public_html/pagos-digitales/\`
+\`/public_html/Tarjetas-transferencias/\`
 
 Estructura requerida:
-- \`/public_html/pagos-digitales/index.html\`
-- \`/public_html/pagos-digitales/assets/\`
-- \`/public_html/pagos-digitales/.htaccess\`
-- \`/public_html/pagos-digitales/icon.svg\`
-- \`/public_html/pagos-digitales/manifest.json\`
-- \`/public_html/pagos-digitales/backend/api.php\`
-- \`/public_html/pagos-digitales/backend/config.php\`
-- \`/public_html/pagos-digitales/backend/card.php\`
-- \`/public_html/pagos-digitales/uploads/\` (permisos 755)
+- \`/public_html/Tarjetas-transferencias/index.html\`
+- \`/public_html/Tarjetas-transferencias/assets/\`
+- \`/public_html/Tarjetas-transferencias/.htaccess\`
+- \`/public_html/Tarjetas-transferencias/icon.svg\`
+- \`/public_html/Tarjetas-transferencias/manifest.json\`
+- \`/public_html/Tarjetas-transferencias/backend/api.php\`
+- \`/public_html/Tarjetas-transferencias/backend/config.php\`
+- \`/public_html/Tarjetas-transferencias/backend/card.php\`
+- \`/public_html/Tarjetas-transferencias/uploads/\` (permisos 755)
 
 ## 5. Verificación
 Abre tu navegador en:
@@ -314,7 +314,7 @@ Crea tu primera tarjeta y compártela en WhatsApp. ¡Verás el logotipo y metada
               type="url"
               value={settings.baseUrl}
               onChange={(e) => setSettings({ ...settings, baseUrl: e.target.value })}
-              placeholder="https://lavdigitalmkt.com/pagos-digitales/"
+              placeholder="https://lavdigitalagency.com/Tarjetas-transferencias/"
               className="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs font-mono focus:outline-none focus:border-emerald-500"
             />
             <button
@@ -436,7 +436,7 @@ Crea tu primera tarjeta y compártela en WhatsApp. ¡Verás el logotipo y metada
           <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
             <div className="font-bold text-emerald-400">Paso 3: Subir Archivos a la Carpeta Independiente</div>
             <p className="text-slate-400">
-              Desde el <strong>Administrador de Archivos</strong> de Hostinger o FileZilla (FTP), sube los archivos compilados a <code>/public_html/pagos-digitales/</code>. No toques ni sobrescribas tus otras carpetas de tarjetas, inmobiliaria o invitaciones.
+              Desde el <strong>Administrador de Archivos</strong> de Hostinger o FileZilla (FTP), sube los archivos compilados a <code>/public_html/Tarjetas-transferencias/</code>. No toques ni sobrescribas tus otras carpetas de tarjetas, inmobiliaria o invitaciones.
             </p>
           </div>
 
