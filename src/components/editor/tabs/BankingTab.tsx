@@ -181,8 +181,7 @@ export const BankingTab: React.FC<BankingTabProps> = ({
             <div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
           </label>
         </div>
-        {wifi.enabled && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1.5">Nombre de la red (SSID)</label>
               <input type="text" value={wifi.ssid} onChange={e=>onChange({wifi:{...wifi,ssid:e.target.value}})} placeholder="Ej. Mi_Negocio_WiFi" autoComplete="off" className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs focus:outline-none focus:border-cyan-500"/>
@@ -197,8 +196,7 @@ export const BankingTab: React.FC<BankingTabProps> = ({
                 </button>
               </div>
             </div>
-          </div>
-        )}
+        </div>
       </section>
 
       {card.banking.enabled && (
