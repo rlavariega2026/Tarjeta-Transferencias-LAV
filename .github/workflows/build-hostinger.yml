@@ -69,16 +69,8 @@ jobs:
           ftp.connect(host, 21, timeout=25)
           ftp.login(os.environ['FTP_USERNAME'], os.environ['FTP_PASSWORD'])
           start = ftp.pwd()
-          entries = ftp.nlst()
-          names = {x.rstrip('/').split('/')[-1] for x in entries}
-          if start.rstrip('/').endswith('/public_html') and 'Tarjetas-transferencias' in names:
-              target = 'Tarjetas-transferencias/'
-          elif 'public_html' in names:
-              target = 'public_html/Tarjetas-transferencias/'
-          elif 'Tarjetas-transferencias' in names:
-              target = 'Tarjetas-transferencias/'
-          else:
-              raise RuntimeError('Cannot identify FTP public_html directory safely; deployment stopped')
+          # The domain has its own document root; /public_html is NOT the live domain.
+          target = '/domains/lavdigitalagency.com/public_html/Tarjetas-transferencias/'
           ftp.cwd(target.rstrip('/'))
           print('FTP initial directory:', start)
           print('Verified destination:', ftp.pwd())
