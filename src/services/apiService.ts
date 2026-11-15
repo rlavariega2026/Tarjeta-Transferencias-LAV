@@ -154,7 +154,7 @@ export async function saveCard(card: PaymentCard): Promise<{ success: boolean; c
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',\n        'X-CSRF-Token': sessionStorage.getItem('lav_csrf') || ''
       },
       body: JSON.stringify(preparedCard)
     });
@@ -193,7 +193,7 @@ export async function deleteCard(id: string): Promise<{ success: boolean }> {
   saveLocalCards(filtered);
 
   try {
-    await fetch(`${API_BASE}/cards/${encodeURIComponent(id)}`, { method: 'DELETE' });
+    await fetch(`${API_BASE}/cards/${encodeURIComponent(id)}`, { method: 'DELETE', headers: {'X-CSRF-Token':sessionStorage.getItem('lav_csrf')||''} });
   } catch (err) {
     console.warn('Error llamando a delete en servidor:', err);
   }
