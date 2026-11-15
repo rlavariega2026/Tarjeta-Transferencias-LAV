@@ -209,6 +209,16 @@ export const EditorLayout: React.FC<EditorLayoutProps> = ({
             </button>
 
             <button
+              onClick={handleSaveAs}
+              disabled={isSaving}
+              className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl transition-colors disabled:opacity-50"
+              title="Crear una tarjeta independiente sin modificar la original"
+            >
+              <Copy className="w-3.5 h-3.5" />
+              <span>Guardar como</span>
+            </button>
+
+            <button
               onClick={handleSaveDraft}
               disabled={isSaving}
               className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-300 bg-slate-800 hover:bg-slate-700 rounded-xl transition-colors border border-slate-700 cursor-pointer"
