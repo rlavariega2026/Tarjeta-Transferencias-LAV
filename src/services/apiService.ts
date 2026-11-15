@@ -154,7 +154,8 @@ export async function saveCard(card: PaymentCard): Promise<{ success: boolean; c
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',\n        'X-CSRF-Token': sessionStorage.getItem('lav_csrf') || ''
+        'Accept': 'application/json',
+        'X-CSRF-Token': sessionStorage.getItem('lav_csrf') || ''
       },
       body: JSON.stringify(preparedCard)
     });
