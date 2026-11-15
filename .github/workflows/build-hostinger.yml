@@ -110,6 +110,33 @@ jobs:
             **/data/**
             **/uploads/**
 
+      - name: Deploy PHP API without touching stored cards or uploads
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_TARGET: ${{ steps.ftp_path.outputs.server_dir }}
+        run: |
+          python3 - <<'PY'
+          import ftplib, os, io
+          ftp=ftplib.FTP(os.environ['FTP_SERVER'].replace('ftp://','').replace('ftps://','').strip('/'),timeout=30)
+          ftp.login(os.environ['FTP_USERNAME'],os.environ['FTP_PASSWORD'])
+          ftp.cwd(os.environ['FTP_TARGET'])
+          try:
+              ftp.cwd('api')
+          except ftplib.error_perm:
+              ftp.mkd('api')
+              ftp.cwd('api')
+          with open('api/index.php','rb') as f:
+              ftp.storbinary('STOR index.php',f)
+          received=io.BytesIO()
+          ftp.retrbinary('RETR index.php',received.write)
+          with open('api/index.php','rb') as f:
+              assert received.getvalue()==f.read(), 'PHP API upload verification failed'
+          print('PHP API uploaded and verified; existing cards and uploads preserved')
+          ftp.quit()
+          PY
+
       - name: Verify uploaded release on FTP
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
