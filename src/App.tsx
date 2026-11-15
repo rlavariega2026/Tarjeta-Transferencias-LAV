@@ -206,6 +206,10 @@ export default function App() {
   const handleSaveCard = async (cardToSave: PaymentCard, isPublish: boolean) => {
     try {
       const result = await saveCard(cardToSave);
+      if (!result.success) {
+        addToast('No se publicó en Hostinger', result.message, 'error');
+        return;
+      }
       if (result.success) {
         // Actualizar lista local
         setCards(prev => {
