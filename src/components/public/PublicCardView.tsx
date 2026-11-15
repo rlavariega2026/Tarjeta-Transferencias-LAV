@@ -146,7 +146,6 @@ export const PublicCardView: React.FC<PublicCardViewProps> = ({
       )}
       {card.status === 'demo' && (
         <div aria-label="Versión de demostración" className="pointer-events-none fixed inset-0 z-40 flex flex-col items-center justify-center select-none" style={{opacity: 0.23}}>
-          <img src={`${import.meta.env.BASE_URL}lav-logo-demo.png`} alt="" className="w-36 sm:w-52 object-contain" />
           <span className="text-7xl sm:text-9xl font-black tracking-widest" style={{color:'#9061d8',transform:'rotate(-18deg)'}}>DEMO</span>
           <span className="text-sm font-bold text-violet-500">Versión de demostración · LAV Digital MKT</span>
         </div>
