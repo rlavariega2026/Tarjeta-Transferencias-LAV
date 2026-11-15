@@ -30,17 +30,16 @@ export default function App() {
   });
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Registro del Service Worker para PWA y soporte offline
+  // Retirar el service worker anterior que podía servir una interfaz obsoleta.
   useEffect(() => {
-    if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
-      navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`, {
-        updateViaCache: 'none'
-      }).then((registration) => {
-        // Solicitar la versión más reciente del Service Worker en cada visita.
-        return registration.update();
-      }).catch((err) => {
-        console.warn('Service worker registration/update failed:', err);
-      });
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(registrations => {
+        registrations.forEach(registration => {
+          if (registration.scope.includes('/Tarjetas-transferencias/')) {
+            registration.unregister().catch(console.warn);
+          }
+        });
+      }).catch(console.warn);
     }
   }, []);
 
