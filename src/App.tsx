@@ -247,6 +247,29 @@ export default function App() {
     }
   };
 
+  // Guardar como crea una tarjeta independiente sin sobrescribir el original.
+  const handleSaveAs = async (card: PaymentCard, name: string) => {
+    const suffix = Math.random().toString(36).slice(2, 8);
+    const copy: PaymentCard = {
+      ...JSON.parse(JSON.stringify(card)),
+      id: `card_${Date.now()}_${suffix}`,
+      businessName: name,
+      slug: `${card.slug}-copia-${suffix}`,
+      status: 'draft',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      publishedAt: undefined
+    };
+    const result = await saveCard(copy);
+    if (!result.success) {
+      addToast('Error al guardar copia', result.message, 'error');
+      return;
+    }
+    setCards(prev => [result.card, ...prev]);
+    setActiveCard(result.card);
+    addToast('Copia independiente guardada', name, 'success');
+  };
+
   // Eliminar tarjeta
   const handleDeleteCard = async (id: string) => {
     try {
@@ -318,6 +341,7 @@ export default function App() {
               allCards={cards}
               onChange={(updated) => setActiveCard(updated)}
               onSave={handleSaveCard}
+              onSaveAs={handleSaveAs}
               onBack={() => setCurrentView('dashboard')}
               onDelete={handleDeleteCard}
               onNotify={addToast}
