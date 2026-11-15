@@ -2,7 +2,7 @@
  * LAV Digital Pagos - Tipos y modelos de datos
  */
 
-export type CardStatus = 'draft' | 'published' | 'archived';
+export type CardStatus = 'draft' | 'published' | 'demo' | 'archived';
 
 export interface BankCustomField {
   id: string;
