@@ -158,3 +158,24 @@ jobs:
           if actual!=expected: raise RuntimeError('FTP release mismatch')
           ftp.quit()
           PY
+
+      - name: Diagnose live HTTPS and DNS from GitHub runner
+        if: always()
+        continue-on-error: true
+        run: |
+          python3 - <<'PY'
+          import socket,urllib.request,urllib.error
+          host='lavdigitalagency.com'
+          try:
+              print('DNS:',socket.getaddrinfo(host,443,type=socket.SOCK_STREAM))
+          except Exception as e:
+              print('DNS FAILED:',repr(e))
+          for suffix in ('Tarjetas-transferencias/lav-release.txt','Tarjetas-transferencias/','Tarjetas-transferencias/api/health'):
+              url='https://'+host+'/'+suffix
+              try:
+                  with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'LAV-deployment-verifier','Cache-Control':'no-cache'}),timeout=20) as response:
+                      data=response.read(400)
+                      print('LIVE',url,'status',response.status,'final',response.url,'body',repr(data))
+              except Exception as e:
+                  print('LIVE FAILED',url,repr(e))
+          PY
