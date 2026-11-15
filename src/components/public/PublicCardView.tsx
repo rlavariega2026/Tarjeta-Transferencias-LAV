@@ -19,6 +19,22 @@ export const PublicCardView: React.FC<PublicCardViewProps> = ({
   const [error, setError] = useState<string | null>(null);
   const { isInstallable, install, isIOS } = usePWAInstall();
   const [showIosGuide, setShowIosGuide] = useState<boolean>(false);
+  const [fullscreenUnavailable, setFullscreenUnavailable] = useState(false);
+  const enterFullscreen = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (document.fullscreenElement) return;
+    const target = event.target as HTMLElement;
+    if (target.closest('button,a,input,textarea,select,label,summary,video,audio,[role="button"],[contenteditable="true"],[data-no-fullscreen]')) return;
+    if (!document.fullscreenEnabled || !document.documentElement.requestFullscreen) {
+      setFullscreenUnavailable(true);
+      return;
+    }
+    document.documentElement.requestFullscreen().catch(() => setFullscreenUnavailable(true));
+  };
+
+  useEffect(() => {
+    const viewport = document.querySelector('meta[name="viewport"]');
+    viewport?.setAttribute('content', 'width=device-width, initial-scale=1, viewport-fit=cover');
+  }, []);
 
   // Limpieza defensiva de elementos administrativos que no deben aparecer
   // en una tarjeta pública, incluso si una plantilla o caché los inserta.
@@ -121,6 +137,12 @@ export const PublicCardView: React.FC<PublicCardViewProps> = ({
         backgroundAttachment: 'fixed'
       }}
     >
+      {fullscreenUnavailable && (
+        <div data-no-fullscreen className="fixed bottom-4 left-4 right-4 z-[100] mx-auto max-w-sm rounded-xl bg-slate-900 text-white p-3 text-xs shadow-xl flex gap-3 items-center">
+          <span>Tu navegador no permite pantalla completa aquí. Puedes agregar la tarjeta a tu pantalla de inicio si el dispositivo lo admite.</span>
+          <button onClick={() => setFullscreenUnavailable(false)} className="underline shrink-0">Cerrar</button>
+        </div>
+      )}
       {/* Botón Flotante Superior PWA / Instalar en Celular */}
       <div className="w-full max-w-md flex items-center justify-between py-2 px-1 mb-2">
         <div />
