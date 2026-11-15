@@ -124,6 +124,17 @@ export const EditorLayout: React.FC<EditorLayoutProps> = ({
     }
   };
 
+  const handlePublishDemo = async () => {
+    if (!card.businessName.trim() || !card.slug.trim()) {
+      onNotify('Datos incompletos', 'Indica nombre comercial y dirección de publicación.', 'error');
+      return;
+    }
+    if (card.status === 'published' && !window.confirm('La DEMO reemplazará temporalmente la versión definitiva en la misma URL. ¿Continuar?')) return;
+    setIsSaving(true);
+    try { await onSave({ ...card, status: 'demo' }, false); }
+    finally { setIsSaving(false); }
+  };
+
   const handleCopyLink = () => {
     navigator.clipboard.writeText(publicUrl);
     onNotify('Enlace copiado', publicUrl, 'success');
@@ -170,7 +181,7 @@ export const EditorLayout: React.FC<EditorLayoutProps> = ({
                     ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                     : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
                 }`}>
-                  {card.status === 'published' ? 'Publicada' : 'Borrador'}
+                  {card.status === 'published' ? 'Publicada' : card.status === 'demo' ? 'DEMO' : 'Borrador'}
                 </span>
               </div>
               <div className="text-[11px] text-slate-400 font-mono truncate max-w-xs sm:max-w-md">
@@ -206,6 +217,10 @@ export const EditorLayout: React.FC<EditorLayoutProps> = ({
               <span>{isSaving ? 'Guardando...' : 'Guardar Borrador'}</span>
             </button>
 
+            <button onClick={handlePublishDemo} disabled={isSaving}
+              className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-violet-100 bg-violet-700 hover:bg-violet-600 rounded-xl transition-colors">
+              Publicar DEMO en Hostinger
+            </button>
             <button
               onClick={handlePublish}
               disabled={isSaving}
