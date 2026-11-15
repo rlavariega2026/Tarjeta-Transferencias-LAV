@@ -159,6 +159,25 @@ jobs:
           ftp.quit()
           PY
 
+      - name: Diagnose FTP account document root and domain mismatch
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          python3 - <<'PY'
+          import ftplib,os
+          f=ftplib.FTP(os.environ['FTP_SERVER'].replace('ftp://','').strip('/'),timeout=30)
+          f.login(os.environ['FTP_USERNAME'],os.environ['FTP_PASSWORD'])
+          print('FTP login root:',f.pwd())
+          for d in ('.','..','/','/public_html','/domains','/domains/lavdigitalagency.com/public_html','/public_html/Tarjetas-transferencias'):
+              try:
+                  f.cwd(d)
+                  print('DIRECTORY',d,'resolved',f.pwd(),'entries',[x.split('/')[-1] for x in f.nlst()][:30])
+              except Exception as e: print('DIRECTORY UNAVAILABLE',d,str(e))
+          f.quit()
+          PY
+
       - name: Diagnose live HTTPS and DNS from GitHub runner
         if: always()
         continue-on-error: true
