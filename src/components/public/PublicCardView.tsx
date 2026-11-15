@@ -128,7 +128,8 @@ export const PublicCardView: React.FC<PublicCardViewProps> = ({
 
   return (
     <div 
-      className="min-h-screen flex flex-col items-center justify-start p-3 sm:p-6 transition-colors"
+      onClick={enterFullscreen}
+      className="min-h-[100dvh] w-full overflow-x-hidden flex flex-col items-center justify-start p-3 sm:p-6 transition-colors"
       style={{
         backgroundColor: card.theme.backgroundColor || '#090d16',
         backgroundImage: card.theme.backgroundImage ? `linear-gradient(rgba(0,0,0,0.12), rgba(0,0,0,0.12)), url("${card.theme.backgroundImage}")` : undefined,
@@ -141,6 +142,13 @@ export const PublicCardView: React.FC<PublicCardViewProps> = ({
         <div data-no-fullscreen className="fixed bottom-4 left-4 right-4 z-[100] mx-auto max-w-sm rounded-xl bg-slate-900 text-white p-3 text-xs shadow-xl flex gap-3 items-center">
           <span>Tu navegador no permite pantalla completa aquí. Puedes agregar la tarjeta a tu pantalla de inicio si el dispositivo lo admite.</span>
           <button onClick={() => setFullscreenUnavailable(false)} className="underline shrink-0">Cerrar</button>
+        </div>
+      )}
+      {card.status === 'demo' && (
+        <div aria-label="Versión de demostración" className="pointer-events-none fixed inset-0 z-40 flex flex-col items-center justify-center select-none" style={{opacity: 0.23}}>
+          <img src={`${import.meta.env.BASE_URL}lav-logo-demo.png`} alt="" className="w-36 sm:w-52 object-contain" />
+          <span className="text-7xl sm:text-9xl font-black tracking-widest" style={{color:'#9061d8',transform:'rotate(-18deg)'}}>DEMO</span>
+          <span className="text-sm font-bold text-violet-500">Versión de demostración · LAV Digital MKT</span>
         </div>
       )}
       {/* Botón Flotante Superior PWA / Instalar en Celular */}
