@@ -125,7 +125,12 @@ jobs:
           ftp.retrbinary('RETR index.php',received.write)
           with open('api/index.php','rb') as f:
               assert received.getvalue()==f.read(), 'PHP API upload verification failed'
-          print('PHP API uploaded and verified; existing cards and uploads preserved')
+          ftp.cwd('..')
+          try: ftp.cwd('data')
+          except ftplib.error_perm: ftp.mkd('data'); ftp.cwd('data')
+          ftp.storbinary('STOR .htaccess',io.BytesIO(b'Require all denied\\n'))
+          ftp.cwd('..')
+          print('PHP API uploaded and verified; protected data directory; existing cards and uploads preserved')
           ftp.quit()
           PY
 
