@@ -40,6 +40,7 @@ interface EditorLayoutProps {
   allCards: PaymentCard[];
   onChange: (card: PaymentCard) => void;
   onSave: (card: PaymentCard, isPublish: boolean) => Promise<void>;
+  onSaveAs: (card: PaymentCard, name: string) => Promise<void>;
   onBack: () => void;
   onDelete: (id: string) => void;
   onNotify: (title: string, desc?: string, type?: 'success' | 'error' | 'info') => void;
@@ -61,6 +62,7 @@ export const EditorLayout: React.FC<EditorLayoutProps> = ({
   allCards,
   onChange,
   onSave,
+  onSaveAs,
   onBack,
   onDelete,
   onNotify
@@ -83,6 +85,14 @@ export const EditorLayout: React.FC<EditorLayoutProps> = ({
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const handleSaveAs = async () => {
+    const name = window.prompt('Nombre de la nueva tarjeta (se conservará la original):', card.businessName + ' (Copia)');
+    if (!name?.trim()) return;
+    setIsSaving(true);
+    try { await onSaveAs(card, name.trim()); }
+    finally { setIsSaving(false); }
   };
 
   const handlePublish = async () => {
