@@ -17,6 +17,14 @@ import { HostingerGuideView } from './components/hostinger/HostingerGuideView';
 import { PublicCardView } from './components/public/PublicCardView';
 
 export default function App() {
+  const [auth, setAuth] = useState<{username:string;role:string}|null>(null);
+  const [authLoading,setAuthLoading]=useState(true);
+  const [setupRequired,setSetupRequired]=useState(false);
+  const [username,setUsername]=useState('');
+  const [password,setPassword]=useState('');
+  const [authError,setAuthError]=useState('');
+  const [users,setUsers]=useState<Array<{username:string;role:string;active:boolean}>>([]);
+  const [showUsers,setShowUsers]=useState(false);
   const [cards, setCards] = useState<PaymentCard[]>([]);
   const [activeCard, setActiveCard] = useState<PaymentCard | null>(null);
   const [currentView, setCurrentView] = useState<'dashboard' | 'editor' | 'templates' | 'hostinger'>('dashboard');
@@ -30,6 +38,15 @@ export default function App() {
   });
   const [loading, setLoading] = useState<boolean>(true);
 
+  useEffect(()=>{fetch(`${import.meta.env.BASE_URL}api/auth/status`,{credentials:'same-origin',cache:'no-store'}).then(r=>r.json()).then(d=>{setAuth(d.user||null);setSetupRequired(!!d.setupRequired);if(d.csrf)sessionStorage.setItem('lav_csrf',d.csrf);}).catch(()=>setAuthError('No se pudo contactar al servidor')).finally(()=>setAuthLoading(false));},[]);
+  const submitAuth=async(e:React.FormEvent)=>{e.preventDefault();setAuthError('');try{
+    const res=await fetch(`${import.meta.env.BASE_URL}api/auth/${setupRequired?'setup':'login'}`,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({username:setupRequired?'lavariega':username,password})});
+    const data=await res.json();if(!res.ok)throw Error(data.error||'Acceso denegado');
+    sessionStorage.setItem('lav_csrf',data.csrf);setAuth(data.user);setSetupRequired(false);setPassword('');
+  }catch(e:any){setAuthError(e.message)}};
+  const manageUser=async(action:string,name:string,pass?:string)=>{const res=await fetch(`${import.meta.env.BASE_URL}api/users`,{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-Token':sessionStorage.getItem('lav_csrf')||''},body:JSON.stringify({action,username:name,password:pass})});const d=await res.json();if(!res.ok){alert(d.error);return;}await loadUsers();};
+  const loadUsers=async()=>{const r=await fetch(`${import.meta.env.BASE_URL}api/users`);if(r.ok)setUsers(await r.json());};
+  const logout=async()=>{await fetch(`${import.meta.env.BASE_URL}api/auth/logout`,{method:'POST',headers:{'X-CSRF-Token':sessionStorage.getItem('lav_csrf')||''}});setAuth(null);setCards([]);setActiveCard(null);};
   // Retirar el service worker anterior que podía servir una interfaz obsoleta.
   useEffect(() => {
     if ('serviceWorker' in navigator) {
@@ -311,9 +328,13 @@ export default function App() {
     );
   }
 
+  if(authLoading)return <div className="min-h-screen bg-slate-950 text-white p-12">Verificando acceso...</div>;
+  if(!auth)return <main className="min-h-screen bg-slate-950 text-white flex items-center justify-center p-5"><form onSubmit={submitAuth} className="w-full max-w-md bg-slate-900 border border-slate-700 rounded-3xl p-8 space-y-5"><h1 className="text-2xl font-bold">LAV Digital Pagos</h1><h2 className="text-lg">{setupRequired?'Configurar superadministrador':'Iniciar sesión'}</h2>{setupRequired?<p>Usuario principal: lavariega. Establece una contraseña de al menos 12 caracteres.</p>:<input className="w-full p-3 rounded-xl bg-slate-800" placeholder="Nombre de usuario" value={username} onChange={e=>setUsername(e.target.value)} required/>}<input className="w-full p-3 rounded-xl bg-slate-800" type="password" placeholder="Contraseña" minLength={setupRequired?12:undefined} value={password} onChange={e=>setPassword(e.target.value)} required/>{authError&&<p className="text-red-400">{authError}</p>}<button className="w-full rounded-xl bg-emerald-400 text-slate-950 font-bold p-3" type="submit">{setupRequired?'Crear cuenta principal':'Iniciar sesión'}</button></form></main>;
   // 2. VISTA DE ADMINISTRACIÓN Y EDITOR (PANEL COMERCIAL)
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-emerald-500/30 selection:text-emerald-300">
+      <div className="flex justify-end gap-3 items-center p-3 bg-slate-900 text-sm"><span>{auth.username} ({auth.role==='superadmin'?'Superadministrador':'Usuario'})</span>{auth.role==='superadmin'&&<button className="rounded-lg bg-indigo-700 px-3 py-2" onClick={()=>{setShowUsers(!showUsers);loadUsers();}}>Administración de usuarios</button>}<button className="rounded-lg bg-slate-700 px-3 py-2" onClick={logout}>Cerrar sesión</button></div>
+      {showUsers&&auth.role==='superadmin'&&<section className="p-5 bg-slate-900 border-b border-slate-700"><h2 className="text-xl font-bold mb-4">Administración de usuarios</h2><button className="bg-emerald-600 p-2 rounded-lg mb-3" onClick={()=>{const n=prompt('Nuevo nombre de usuario');if(!n)return;const p=prompt('Contraseña (mínimo 12 caracteres)');if(p)manageUser('create',n,p);}}>Crear usuario</button><div className="space-y-2">{users.map(u=><div key={u.username} className="flex flex-wrap gap-2 items-center border-b border-slate-700 py-2"><span className="min-w-48">{u.username} · {u.role} · {u.active?'Activo':'Suspendido'}</span><button className="px-2 bg-slate-700 rounded" onClick={()=>{const p=prompt('Nueva contraseña (mínimo 12 caracteres)');if(p)manageUser('password',u.username,p);}}>Cambiar contraseña</button>{u.role!=='superadmin'&&<><button className="px-2 bg-slate-700 rounded" onClick={()=>manageUser(u.active?'suspend':'activate',u.username)}>{u.active?'Suspender':'Activar'}</button><button className="px-2 bg-red-800 rounded" onClick={()=>{if(confirm('¿Eliminar usuario?'))manageUser('delete',u.username)}}>Eliminar</button></>}</div>)}</div></section>}
       {/* Barra de Navegación Principal */}
       <Header
         currentView={currentView}
