@@ -219,7 +219,9 @@ export default function App() {
         });
         setActiveCard(result.card);
 
-        if (isPublish) {
+        if (result.card.status === 'demo') {
+          addToast('DEMO publicada', getCardPublicUrl(result.card.slug), 'success');
+        } else if (isPublish) {
           addToast(
             '¡Tarjeta publicada con éxito!',
             `Tu enlace público activo es: ${getCardPublicUrl(result.card.slug)}`,
