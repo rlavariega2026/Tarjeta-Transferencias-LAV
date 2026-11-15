@@ -87,6 +87,10 @@ jobs:
               out.write('server_dir=' + target + chr(10))
           PY
 
+      - name: Stamp release for verification
+        run: |
+          echo "${GITHUB_SHA}" > deploy/lav-release.txt
+
       - name: Deploy frontend to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -96,6 +100,7 @@ jobs:
           protocol: ftp
           port: 21
           server-dir: ${{ steps.ftp_path.outputs.server_dir }}
+          state-name: .ftp-deploy-lav-transferencias-20261115.json
           local-dir: ./deploy/
           exclude: |
             **/.git*
@@ -104,3 +109,25 @@ jobs:
             **/api/**
             **/data/**
             **/uploads/**
+
+      - name: Verify uploaded release on FTP
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_TARGET: ${{ steps.ftp_path.outputs.server_dir }}
+        run: |
+          python3 - <<'PY'
+          import ftplib, os, io
+          host=os.environ['FTP_SERVER'].replace('ftp://','').replace('ftps://','').strip('/')
+          ftp=ftplib.FTP(host,timeout=30)
+          ftp.login(os.environ['FTP_USERNAME'],os.environ['FTP_PASSWORD'])
+          ftp.cwd(os.environ['FTP_TARGET'])
+          data=io.BytesIO()
+          ftp.retrbinary('RETR lav-release.txt',data.write)
+          actual=data.getvalue().decode().strip()
+          expected=os.environ['GITHUB_SHA']
+          print('FTP deployed SHA:',actual)
+          if actual!=expected: raise RuntimeError('FTP release mismatch')
+          ftp.quit()
+          PY
