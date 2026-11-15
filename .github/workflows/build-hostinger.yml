@@ -71,9 +71,11 @@ jobs:
           start = ftp.pwd()
           entries = ftp.nlst()
           names = {x.rstrip('/').split('/')[-1] for x in entries}
-          if 'public_html' in names:
+          if start.rstrip('/').endswith('/public_html') and 'Tarjetas-transferencias' in names:
+              target = 'Tarjetas-transferencias/'
+          elif 'public_html' in names:
               target = 'public_html/Tarjetas-transferencias/'
-          elif 'Tarjetas-transferencias' in names or start.rstrip('/').endswith('/public_html'):
+          elif 'Tarjetas-transferencias' in names:
               target = 'Tarjetas-transferencias/'
           else:
               raise RuntimeError('Cannot identify FTP public_html directory safely; deployment stopped')
@@ -82,7 +84,7 @@ jobs:
           print('Verified destination:', ftp.pwd())
           ftp.quit()
           with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
-              out.write('server_dir=' + target + '\\n')
+              out.write('server_dir=' + target + chr(10))
           PY
 
       - name: Deploy frontend to Hostinger via FTP
