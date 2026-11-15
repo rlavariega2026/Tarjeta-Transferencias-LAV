@@ -169,17 +169,17 @@ export async function saveCard(card: PaymentCard): Promise<{ success: boolean; c
     } else {
       const errData = await response.json().catch(() => ({}));
       return {
-        success: true,
+        success: false,
         card: preparedCard,
-        message: `Guardado en almacenamiento local persistente (aviso del servidor: ${errData.error || 'código ' + response.status})`
+        message: `No se pudo guardar en Hostinger: ${errData.error || 'HTTP ' + response.status}. Los cambios permanecen en este navegador.`
       };
     }
   } catch (err: any) {
     console.warn('No se pudo conectar con el endpoint /api/cards, guardado en almacenamiento local:', err);
     return {
-      success: true,
+      success: false,
       card: preparedCard,
-      message: 'Guardado correctamente en almacenamiento local del dispositivo.'
+      message: 'No se pudo conectar con Hostinger. Los cambios permanecen únicamente en este navegador.'
     };
   }
 }
