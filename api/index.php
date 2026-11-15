@@ -55,7 +55,6 @@ if (($parts[0] ?? '') !== '') {
   if ($parts[0] === 'upload' && $method === 'POST') {
     if (!isset($_FILES['logo']) || $_FILES['logo']['error'] !== UPLOAD_ERR_OK) respond(['error'=>'No se recibió un archivo válido'],400);
     $file = $_FILES['logo'];
-    if ($file['size'] > 5 * 1024 * 1024) respond(['error'=>'El archivo supera el límite de 5MB'],413);
     $finfo = new finfo(FILEINFO_MIME_TYPE); $mime = $finfo->file($file['tmp_name']);
     $allowed = ['image/png'=>'png','image/jpeg'=>'jpg','image/webp'=>'webp','image/svg+xml'=>'svg'];
     if (!isset($allowed[$mime])) respond(['error'=>'Formato de imagen no permitido'],415);
