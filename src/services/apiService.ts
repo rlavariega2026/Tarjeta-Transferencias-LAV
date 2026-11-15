@@ -263,16 +263,7 @@ export async function uploadLogo(file: File): Promise<{ url: string }> {
     console.warn('Endpoint de subida no respondió, codificando a Data URL local optimizada:', err);
   }
 
-  // Never report an upload as successful when the server did not store it.
   throw new Error('No se pudo guardar la fotografía en Hostinger. Comprueba el límite PHP del servidor.');
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      resolve({ url: reader.result as string });
-    };
-    reader.onerror = () => reject(new Error('Error al procesar el archivo'));
-    reader.readAsDataURL(file);
-  });
 }
 
 /**
