@@ -243,10 +243,6 @@ export async function uploadLogo(file: File): Promise<{ url: string }> {
     throw new Error('Formato no soportado. Por favor utiliza PNG, JPG, WebP o SVG.');
   }
 
-  // Límite de 5MB
-  if (file.size > 5 * 1024 * 1024) {
-    throw new Error('El archivo supera el límite de 5MB.');
-  }
 
   // Intenta subir vía FormData al backend
   const formData = new FormData();
@@ -267,7 +263,8 @@ export async function uploadLogo(file: File): Promise<{ url: string }> {
     console.warn('Endpoint de subida no respondió, codificando a Data URL local optimizada:', err);
   }
 
-  // Fallback seguro a Data URL en base64 para persistir sin fallar
+  // Never report an upload as successful when the server did not store it.
+  throw new Error('No se pudo guardar la fotografía en Hostinger. Comprueba el límite PHP del servidor.');
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
