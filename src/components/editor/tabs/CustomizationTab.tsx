@@ -1,3 +1,5 @@
+import { CardEffectControls } from './AppearanceControls';
+import { getCardEffects } from '../../../services/cardAppearance';
 import React, { useRef } from 'react';
 import { Palette, Type, Square, Sliders, RotateCcw } from 'lucide-react';
 import { PaymentCard } from '../../../types/paymentCard';
@@ -45,6 +47,8 @@ export const CustomizationTab: React.FC<CustomizationTabProps> = ({
 
   return (
     <div className="space-y-6">
+      <CardEffectControls value={getCardEffects(card)} onChange={effects => updateTheme({ effects })} />
+
       {/* Botón Restaurar */}
       <div className="flex items-center justify-between bg-slate-900/60 border border-slate-800 rounded-2xl p-4">
         <div>

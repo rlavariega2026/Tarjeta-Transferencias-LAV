@@ -527,7 +527,7 @@ const extraPalettes = [
   ['midnight-indigo','26. Índigo Medianoche','Índigo y violeta para marcas digitales.','#6366f1','#22d3ee','#10112b','#eef2ff']
 ] as const;
 
-TEMPLATES_CATALOG.push(...extraPalettes.map(([id,name,description,primaryColor,secondaryColor,backgroundColor,textColor], index) => ({
+TEMPLATES_CATALOG.push(...extraPalettes.map<TemplateDefinition>(([id,name,description,primaryColor,secondaryColor,backgroundColor,textColor], index) => ({
   id, name, description, category: 'Creativo & Moderno',
   badgeText: 'Nuevo diseño', accentColor: primaryColor,
   features: ['Paleta de color exclusiva', 'Diseño adaptable a móviles'],

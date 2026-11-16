@@ -77,7 +77,34 @@ export interface QRCodeConfig {
   bgColor: string;
 }
 
+export interface DesignShadow {
+  enabled: boolean;
+  color: string;
+  opacity: number;
+  blur: number;
+  x: number;
+  y: number;
+}
+
+export interface LogoAppearance {
+  width: number;
+  height: number;
+  fit: 'contain' | 'cover';
+  zoom: number;
+  x: number;
+  y: number;
+  background: boolean;
+  shadow: DesignShadow;
+}
+
+export interface CardEffects {
+  shadow: DesignShadow;
+  border: { style: 'template' | 'solid' | 'gradient' | 'metallic'; width: number; radius: number; color: string; accent: string };
+  beam: { enabled: boolean; color: string; intensity: number; seconds: number };
+}
+
 export interface CardTheme {
+  effects?: CardEffects;
   primaryColor: string;
   secondaryColor: string;
   backgroundColor: string;
@@ -116,6 +143,7 @@ export interface PaymentCard {
   
   // Identidad
   logoUrl?: string;
+  logoAppearance?: LogoAppearance;
   logoShape: 'original' | 'square' | 'circle' | 'rounded';
   logoSize: 'sm' | 'md' | 'lg' | 'xl';
   logoAlignment: 'left' | 'center' | 'right';

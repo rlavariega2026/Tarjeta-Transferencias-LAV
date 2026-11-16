@@ -1,3 +1,5 @@
+import { LogoAppearanceControls } from './AppearanceControls';
+import { getLogoAppearance } from '../../../services/cardAppearance';
 import React, { useRef } from 'react';
 import { Upload, X, Image as ImageIcon, Building, Tag, Globe, Check, AlertCircle } from 'lucide-react';
 import { PaymentCard } from '../../../types/paymentCard';
@@ -275,7 +277,11 @@ export const IdentityTab: React.FC<IdentityTabProps> = ({
                 <label className="block text-[11px] font-medium text-slate-400 mb-1">Tamaño</label>
                 <select
                   value={card.logoSize || 'md'}
-                  onChange={(e) => onChange({ logoSize: e.target.value as any })}
+                  onChange={(e) => {
+                    const logoSize = e.target.value as PaymentCard['logoSize'];
+                    const { width, height } = getLogoAppearance({ ...card, logoAppearance: undefined, logoSize });
+                    onChange({ logoSize, logoAppearance: { ...getLogoAppearance(card), width, height } });
+                  }}
                   className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 text-xs"
                 >
                   <option value="sm">Pequeño</option>
@@ -302,6 +308,8 @@ export const IdentityTab: React.FC<IdentityTabProps> = ({
           </div>
         </div>
       </div>
+
+      {card.logoUrl && <LogoAppearanceControls value={getLogoAppearance(card)} onChange={logoAppearance => onChange({ logoAppearance })} />}
 
       {/* 3. Leyenda al pie / Nota de verificación */}
       <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5">

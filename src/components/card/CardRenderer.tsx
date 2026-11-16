@@ -1,3 +1,4 @@
+import { getCardEffects, getLogoAppearance, shadowStyle } from '../../services/cardAppearance';
 import React, { useState } from 'react';
 import { 
   Copy, 
@@ -237,13 +238,22 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
     }[card.logoAlignment || 'center'];
 
     if (card.logoUrl) {
+      const logo = getLogoAppearance(card);
+      const position = `${logo.x}% ${logo.y}%`;
       return (
         <div className={`flex items-center ${alignClasses} mb-4`}>
-          <div className={`${sizeClasses} ${shapeClasses} overflow-hidden shadow-sm flex items-center justify-center p-1 bg-white/90 border border-black/10`}>
+          <div className={`${shapeClasses} max-w-full overflow-hidden shrink-0`} style={{
+            width: logo.width, height: logo.height, backgroundColor: logo.background ? '#ffffff' : 'transparent',
+            boxShadow: shadowStyle(logo.shadow),
+          }}>
             <img 
               src={card.logoUrl} 
               alt={`Logotipo de ${card.businessName}`}
-              className="max-h-full max-w-full object-contain"
+              className="block h-full w-full"
+              style={{
+                objectFit: logo.fit, objectPosition: position, transformOrigin: position,
+                transform: logo.fit === 'cover' ? `scale(${logo.zoom})` : undefined,
+              }}
               referrerPolicy="no-referrer"
             />
           </div>
@@ -325,6 +335,15 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
     );
   };
 
+  const effects = getCardEffects(card);
+  const { border, beam } = effects;
+  const customBorder = border.style !== 'template';
+  const borderPaint = border.style === 'metallic'
+    ? `linear-gradient(137deg, ${border.color}, ${border.accent} 18%, ${border.color} 34%, #fff 48%, ${border.accent} 63%, ${border.color} 84%, ${border.accent})`
+    : border.style === 'gradient'
+      ? `linear-gradient(145deg, ${border.color}, ${border.accent})`
+      : border.color;
+
   return (
     <div 
       className={`premium-template premium-${templateId} w-full max-w-md mx-auto transition-all duration-300 relative ${
@@ -335,10 +354,14 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
         backgroundImage: theme.backgroundImage ? `linear-gradient(rgba(0,0,0,0.10), rgba(0,0,0,0.10)), url(${theme.backgroundImage})` : undefined,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        '--transfer-outline-radius': `${border.radius}px`,
+        '--transfer-card-shadow': shadowStyle(effects.shadow),
         color: theme.textColor,
         fontFamily: ({sans:"'Plus Jakarta Sans',sans-serif",display:"'Outfit',sans-serif",serif:"'Playfair Display',Georgia,serif",mono:"'JetBrains Mono',monospace",poppins:"'Poppins','Plus Jakarta Sans',sans-serif",montserrat:"'Montserrat',sans-serif",lora:"'Lora',Georgia,serif",space:"'Space Grotesk',sans-serif"} as Record<string,string>)[theme.fontFamily] || "'Plus Jakarta Sans',sans-serif"
-      }}
+      } as React.CSSProperties}
       data-template={templateId}
+      data-design-border={customBorder ? 'custom' : undefined}
+      data-design-shadow={effects.shadow.enabled ? 'custom' : undefined}
     >
       {/* Tarjeta Contenedora Principal */}
       <div 
@@ -357,9 +380,19 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
           backgroundColor: theme.surfaceColor,
           backgroundImage: theme.backgroundImage ? `linear-gradient(rgba(0,0,0,0.10), rgba(0,0,0,0.10)), url(${theme.backgroundImage})` : (theme.backgroundGradient || undefined),
           backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }}
+          backgroundPosition: 'center',
+          '--transfer-outline-width': `${border.width}px`,
+          '--transfer-outline-paint': borderPaint,
+        } as React.CSSProperties}
       >
+        {(customBorder || beam.enabled) && <span className="transfer-card-effects" aria-hidden="true">
+          {customBorder && <span className="transfer-card-outline" />}
+          {beam.enabled && <span className="transfer-card-beam" style={{
+            '--transfer-beam-color': beam.color,
+            '--transfer-beam-duration': `${beam.seconds}s`,
+            opacity: beam.intensity / 100,
+          } as React.CSSProperties} />}
+        </span>}
         {/* Cabecera / Identidad del Negocio */}
         <div data-premium-section="brand">
         <div className="mb-6">
