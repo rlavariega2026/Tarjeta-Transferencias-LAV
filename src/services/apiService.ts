@@ -235,7 +235,7 @@ export function isSlugAvailable(slug: string, currentCardId: string, allCards: P
 }
 
 /**
- * Sube un archivo de logotipo al servidor o lo convierte a Base64 optimizado
+ * Sube un archivo de logotipo al servidor con la sesión activa
  */
 export async function uploadLogo(file: File): Promise<{ url: string }> {
   // Validación de seguridad de archivo
@@ -245,26 +245,31 @@ export async function uploadLogo(file: File): Promise<{ url: string }> {
   }
 
 
-  // Intenta subir vía FormData al backend
   const formData = new FormData();
   formData.append('logo', file);
 
+  let response: Response;
   try {
-    const res = await fetch(`${API_BASE}/upload`, {
+    response = await fetch(`${API_BASE}/upload`, {
       method: 'POST',
-      body: formData
+      headers: { 'X-CSRF-Token': sessionStorage.getItem('lav_csrf') || '' },
+      body: formData,
     });
-    if (res.ok) {
-      const data = await res.json();
-      if (data && data.url) {
-        return { url: data.url };
-      }
-    }
-  } catch (err) {
-    console.warn('Endpoint de subida no respondió, codificando a Data URL local optimizada:', err);
+  } catch {
+    throw new Error('No se pudo conectar con Hostinger para subir la imagen.');
   }
 
-  throw new Error('No se pudo guardar la fotografía en Hostinger. Comprueba el límite PHP del servidor.');
+  const data = await response.json().catch(() => null);
+  if (response.ok && typeof data?.url === 'string' && data.url) {
+    return { url: data.url };
+  }
+  if (response.status === 401 || (response.status === 403 && data?.error === 'CSRF inválido')) {
+    throw new Error('Vuelve a iniciar sesión e intenta subir el logotipo de nuevo.');
+  }
+  if (response.status === 413) {
+    throw new Error('El tamaño del archivo supera el límite de carga de Hostinger.');
+  }
+  throw new Error(typeof data?.error === 'string' ? data.error : `Hostinger no pudo subir la imagen (HTTP ${response.status}).`);
 }
 
 /**
