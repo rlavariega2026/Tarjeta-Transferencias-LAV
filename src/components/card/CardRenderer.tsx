@@ -1,3 +1,4 @@
+import paypalLogo from '../../assets/paypal.png';
 import { getCardEffects, getLogoAppearance, shadowStyle } from '../../services/cardAppearance';
 import React, { useState } from 'react';
 import { 
@@ -26,6 +27,15 @@ import { PaymentCard, BankAccount } from '../../types/paymentCard';
 import { formatClabeDisplay, formatCardNumberDisplay } from '../../services/clabeValidator';
 import { getCardPublicUrl } from '../../services/apiService';
 
+function getPayPalPaymentLink(value: string): string | undefined {
+  try {
+    const url = new URL(value.trim());
+    if (url.protocol === 'https:' && !url.username && !url.password) return url.href;
+  } catch {
+    return undefined;
+  }
+}
+
 interface CardRendererProps {
   card: PaymentCard;
   isInteractive?: boolean;
@@ -49,6 +59,12 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
   const [qrDataUrl, setQrDataUrl] = useState<string>('');
 
   const publicUrl = getCardPublicUrl(card.slug, overrideBaseUrl);
+  const { paypal } = card;
+  const paypalLink = getPayPalPaymentLink(paypal.payUrl || '');
+  const paypalEmail = paypal.recipientEmail?.trim();
+  const paypalConcept = paypal.concept?.trim();
+  const paypalAmount = paypal.suggestedAmount?.trim();
+  const paypalCurrency = paypal.currency?.trim() || 'MXN';
 
   const notify = (title: string, desc?: string, type: 'success' | 'error' | 'info' = 'success') => {
     if (onNotify) {
@@ -127,10 +143,13 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
       });
     }
 
-    if (card.paypal.enabled && card.paypal.payUrl) {
-      sections.push(`\n🅿️ *PAYPAL:*`);
-      sections.push(`• Paga con tarjeta o saldo: ${card.paypal.payUrl}`);
-      if (card.paypal.description) sections.push(`• Nota: ${card.paypal.description}`);
+    if (paypal.enabled) {
+      sections.push(`\n*PAYPAL:*`);
+      if (paypalEmail) sections.push(`• Correo receptor: ${paypalEmail}`);
+      if (paypalConcept) sections.push(`• Concepto: ${paypalConcept}`);
+      sections.push(paypalAmount ? `• Monto sugerido: ${paypalAmount} ${paypalCurrency}` : `• Moneda: ${paypalCurrency}`);
+      if (paypalLink) sections.push(`• Enlace de cobro: ${paypalLink}`);
+      if (paypal.description) sections.push(`• Nota: ${paypal.description}`);
     }
 
     sections.push(`\n🔗 Tarjeta digital verificada: ${publicUrl}`);
@@ -621,49 +640,62 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
           {card.wifi.password&&renderCopyItem('Contraseña WiFi',card.wifi.password,'wifi_password',undefined,true,true)}
         </section>}
 
-        {/* MÓDULO 2: PAYPAL */}
-        <div data-premium-section="paypal">
-        {card.paypal.enabled && card.paypal.payUrl && (
-          <div className="mb-6 p-4 rounded-2xl bg-gradient-to-br from-blue-950/20 via-sky-950/10 to-indigo-950/20 border border-blue-500/20">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-blue-500 dark:text-blue-400 flex items-center gap-1.5">
-                <CreditCard className="w-3.5 h-3.5" />
-                <span>{card.paypal.sectionTitle || 'Pago Seguro con PayPal'}</span>
-              </span>
-            </div>
-
-            {card.paypal.description && (
-              <p className="text-xs opacity-80 mb-3 leading-relaxed">
-                {card.paypal.description}
-              </p>
-            )}
-
-            {card.paypal.suggestedAmount && (
-              <div className="text-xs font-semibold mb-3 flex items-center gap-1">
-                <span className="opacity-70">Monto sugerido:</span>
-                <span className="text-emerald-500 font-bold">${card.paypal.suggestedAmount} {card.paypal.currency || 'MXN'}</span>
+        {paypal.enabled && (
+          <section data-premium-section="paypal" aria-label="Pagos con PayPal">
+            <div className="mb-6 p-4 rounded-2xl bg-gradient-to-br from-blue-950/20 via-sky-950/10 to-indigo-950/20 border border-blue-500/20">
+              <div className="mb-3 flex items-center gap-3">
+                <img src={paypalLogo} alt="PayPal" width={36} height={36} className="h-9 w-9 shrink-0 rounded-lg bg-white p-1" />
+                <h2 className="text-sm font-bold">{paypal.sectionTitle || 'Pagos con PayPal'}</h2>
               </div>
-            )}
 
-            <a
-              href={card.paypal.payUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 shadow-md active:scale-98 transition-all no-underline"
-            >
-              <span>{card.paypal.buttonText || 'Pagar con PayPal'}</span>
-              <ExternalLink className="w-4 h-4" />
-            </a>
+              {paypal.businessName && <p className="mb-2 text-sm font-semibold break-words">{paypal.businessName}</p>}
+              {paypal.description && <p className="mb-3 text-xs opacity-80 leading-relaxed">{paypal.description}</p>}
 
-            {card.paypal.instructions && (
-              <p className="text-[11px] opacity-60 mt-2 text-center">
-                {card.paypal.instructions}
-              </p>
-            )}
-          </div>
-        )}
-
+              <dl className="mb-3 space-y-2 text-sm">
+                {paypalEmail && (
+                  <div>
+                    <dt className="text-xs opacity-80">Correo receptor</dt>
+                    <dd className="mt-1 flex min-w-0 items-center justify-between gap-2">
+                      <span className="min-w-0 break-all font-semibold">{paypalEmail}</span>
+                      <button
+                        type="button"
+                        aria-label="Copiar correo de PayPal"
+                        onClick={() => handleCopy('Correo de PayPal', paypalEmail, 'paypal-email')}
+                        className="shrink-0 rounded-lg border border-current/20 px-2 py-1.5 text-xs font-semibold"
+                      >
+                        {copiedField === 'paypal-email' ? 'Copiado' : 'Copiar'}
+                      </button>
+                    </dd>
+                  </div>
+                )}
+                {paypalConcept && (
+                  <div>
+                    <dt className="text-xs opacity-80">Concepto</dt>
+                    <dd className="break-words font-semibold">{paypalConcept}</dd>
+                  </div>
+                )}
+                <div className="flex flex-wrap items-baseline gap-x-2">
+                  <dt className="text-xs opacity-80">{paypalAmount ? 'Monto sugerido' : 'Moneda'}</dt>
+                  <dd className="font-semibold">{paypalAmount ? `${paypalAmount} ${paypalCurrency}` : paypalCurrency}</dd>
                 </div>
+              </dl>
+
+              {paypalLink && (
+                <a
+                  href={paypalLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-amber-400 px-4 py-3 text-center text-sm font-bold text-slate-950 shadow-md transition-colors hover:bg-amber-300"
+                >
+                  <span className="min-w-0 break-words">{paypal.buttonText?.trim() || 'Pagar con PayPal'}</span>
+                  <ExternalLink className="h-4 w-4 shrink-0" />
+                </a>
+              )}
+
+              {paypal.instructions && <p className="mt-2 text-center text-xs opacity-80">{paypal.instructions}</p>}
+            </div>
+          </section>
+        )}
         {/* MÓDULO 3: CALIFICACIÓN EN GOOGLE */}
         <div data-premium-section="reviews">
         {card.googleReview.enabled && card.googleReview.reviewUrl && (

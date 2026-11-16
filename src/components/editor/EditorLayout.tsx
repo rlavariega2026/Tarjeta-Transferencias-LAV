@@ -295,7 +295,7 @@ export const EditorLayout: React.FC<EditorLayoutProps> = ({
           )}
 
           {activeTab === 'paypal' && (
-            <PayPalTab card={card} onChange={updateCard} onNotify={onNotify} />
+            <PayPalTab card={card} onChange={updateCard} />
           )}
 
           {activeTab === 'google' && (

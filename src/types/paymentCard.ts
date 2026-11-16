@@ -44,6 +44,8 @@ export interface PayPalConfig {
   sectionTitle: string;
   payUrl: string;        // e.g. "https://paypal.me/minegocio" o link comercial
   businessName: string;
+  recipientEmail?: string;
+  concept?: string;
   description: string;
   suggestedAmount: string;
   currency: string;

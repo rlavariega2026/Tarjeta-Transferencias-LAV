@@ -1,17 +1,15 @@
 import React from 'react';
-import { CreditCard, ExternalLink, Info, CheckCircle2 } from 'lucide-react';
+import paypalLogo from '../../../assets/paypal.png';
 import { PaymentCard } from '../../../types/paymentCard';
 
 interface PayPalTabProps {
   card: PaymentCard;
   onChange: (updates: Partial<PaymentCard>) => void;
-  onNotify: (title: string, desc?: string, type?: 'success' | 'error' | 'info') => void;
 }
 
 export const PayPalTab: React.FC<PayPalTabProps> = ({
   card,
-  onChange,
-  onNotify
+  onChange
 }) => {
   const paypal = card.paypal;
 
@@ -24,20 +22,21 @@ export const PayPalTab: React.FC<PayPalTabProps> = ({
   return (
     <div className="space-y-6">
       {/* Interruptor del Módulo */}
-      <div className="flex items-center justify-between bg-slate-900/60 border border-slate-800 rounded-2xl p-4">
+      <div className="flex items-center justify-between bg-slate-900/60 border border-slate-800 rounded-2xl p-4 gap-3">
         <div>
           <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
-            <CreditCard className="w-4 h-4 text-blue-400" />
-            <span>Módulo de Pagos con PayPal</span>
+            <img src={paypalLogo} alt="" className="w-5 h-5 rounded bg-white" />
+            <span>Cobros y datos para recibir pagos por PayPal</span>
           </h3>
           <p className="text-xs text-slate-400 mt-0.5">
-            Permite a tus clientes pagar directamente con tarjeta de crédito, débito o saldo PayPal.
+            <label htmlFor="paypal-enabled">Mostrar sección para recibir pagos</label>
           </p>
         </div>
 
         <label className="relative inline-flex items-center cursor-pointer">
           <input
             type="checkbox"
+            id="paypal-enabled"
             checked={paypal.enabled}
             onChange={(e) => updatePayPal({ enabled: e.target.checked })}
             className="sr-only peer"
@@ -50,11 +49,11 @@ export const PayPalTab: React.FC<PayPalTabProps> = ({
         <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-4">
           {/* Enlace de Pago PayPal */}
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center justify-between">
-              <span>Enlace Directo de Pago de PayPal <span className="text-rose-400">*</span></span>
-              <span className="text-[11px] text-slate-400 font-normal">paypal.me o link comercial oficial</span>
+            <label htmlFor="paypal-url" className="block text-xs font-semibold text-slate-300 mb-1.5">
+              Enlace de cobro para recibir pagos (opcional)
             </label>
             <input
+              id="paypal-url"
               type="url"
               value={paypal.payUrl}
               onChange={(e) => updatePayPal({ payUrl: e.target.value })}
@@ -62,17 +61,18 @@ export const PayPalTab: React.FC<PayPalTabProps> = ({
               className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-blue-500 transition-colors"
             />
             <p className="text-[11px] text-slate-400 mt-1">
-              Al hacer clic en la tarjeta pública, abrirá este enlace directamente en una nueva pestaña segura.
+              Pega tu enlace HTTPS de PayPal.me o el enlace de cobro generado en PayPal.
             </p>
           </div>
 
           {/* Texto del Botón */}
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-              Texto del Botón en la Tarjeta
+            <label htmlFor="paypal-button" className="block text-xs font-semibold text-slate-300 mb-1.5">
+              Texto del botón
             </label>
             <input
               type="text"
+              id="paypal-button"
               value={paypal.buttonText}
               onChange={(e) => updatePayPal({ buttonText: e.target.value })}
               placeholder="Ej. Pagar con PayPal o Tarjeta"
@@ -80,43 +80,68 @@ export const PayPalTab: React.FC<PayPalTabProps> = ({
             />
           </div>
 
-          {/* Nombre Comercial y Descripción */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Nombre de la Cuenta PayPal (Opcional)
-              </label>
+            <label className="block text-xs font-semibold text-slate-300">
+              Moneda
+              <select
+                value={paypal.currency || 'MXN'}
+                onChange={(e) => updatePayPal({ currency: e.target.value })}
+                className="mt-1.5 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-100"
+              >
+                <option value="MXN">MXN (Pesos Mexicanos)</option>
+                <option value="USD">USD (Dólares Americanos)</option>
+                <option value="EUR">EUR (Euros)</option>
+                <option value="CAD">CAD (Dólares Canadienses)</option>
+                <option value="GBP">GBP (Libras Esterlinas)</option>
+                {paypal.currency && !['MXN', 'USD', 'EUR', 'CAD', 'GBP'].includes(paypal.currency) && (
+                  <option value={paypal.currency}>{paypal.currency}</option>
+                )}
+              </select>
+            </label>
+            <label className="block text-xs font-semibold text-slate-300">
+              Monto sugerido (opcional)
               <input
                 type="text"
-                value={paypal.businessName}
-                onChange={(e) => updatePayPal({ businessName: e.target.value })}
-                placeholder="Ej. Terraza Gourmet Oficial"
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs"
+                inputMode="decimal"
+                value={paypal.suggestedAmount}
+                onChange={(e) => updatePayPal({ suggestedAmount: e.target.value })}
+                placeholder="Ej. 250.00"
+                className="mt-1.5 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-100"
               />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Monto Sugerido (Opcional)
-              </label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={paypal.suggestedAmount}
-                  onChange={(e) => updatePayPal({ suggestedAmount: e.target.value })}
-                  placeholder="Ej. 250.00"
-                  className="flex-1 px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs font-mono"
-                />
-                <input
-                  type="text"
-                  value={paypal.currency}
-                  onChange={(e) => updatePayPal({ currency: e.target.value })}
-                  placeholder="MXN"
-                  className="w-20 px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs text-center font-bold"
-                />
-              </div>
-            </div>
+            </label>
           </div>
+
+          <label className="block text-xs font-semibold text-slate-300">
+            Correo de PayPal que recibe el dinero (opcional)
+            <input
+              type="email"
+              value={paypal.recipientEmail ?? ''}
+              onChange={(e) => updatePayPal({ recipientEmail: e.target.value })}
+              placeholder="cobros@tu-negocio.com"
+              className="mt-1.5 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-100"
+            />
+          </label>
+
+          <label className="block text-xs font-semibold text-slate-300">
+            Concepto que verá quien te pague
+            <input
+              type="text"
+              value={paypal.concept ?? ''}
+              onChange={(e) => updatePayPal({ concept: e.target.value })}
+              placeholder="Ej. Anticipo de diseño"
+              className="mt-1.5 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-100"
+            />
+          </label>
+
+          <label className="block text-xs font-semibold text-slate-300">
+            Nombre de la cuenta PayPal (opcional)
+            <input
+              type="text"
+              value={paypal.businessName}
+              onChange={(e) => updatePayPal({ businessName: e.target.value })}
+              className="mt-1.5 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-100"
+            />
+          </label>
 
           {/* Descripción / Nota informativa */}
           <div>
@@ -144,14 +169,6 @@ export const PayPalTab: React.FC<PayPalTabProps> = ({
               placeholder="Ej. Favor de conservar tu comprobante digital de PayPal."
               className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs"
             />
-          </div>
-
-          {/* Aviso de seguridad */}
-          <div className="p-3 bg-blue-950/20 border border-blue-500/20 rounded-xl flex items-start gap-2 text-xs text-blue-300">
-            <Info className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-            <span>
-              Por seguridad bancaria, LAV Digital Pagos no solicita contraseñas ni almacena credenciales privadas. El cliente realiza el pago directamente en la plataforma protegida de PayPal.
-            </span>
           </div>
         </div>
       )}
