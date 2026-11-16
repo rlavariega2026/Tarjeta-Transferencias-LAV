@@ -86,6 +86,16 @@ app.post('/api/cards', (req, res) => {
   const cards = loadStoredCards();
   const index = cards.findIndex((c: any) => c.id === incomingCard.id);
 
+  const slug = String(incomingCard.slug).toLowerCase();
+  if (slug !== String(cards[index]?.slug ?? '').toLowerCase()) {
+    if (!/^[a-z0-9_-]+$/.test(slug)) {
+      return res.status(400).json({ error: 'El nombre de publicación solo admite letras, números y guiones' });
+    }
+    if (cards.some((card: any) => card.id !== incomingCard.id && String(card.slug).toLowerCase() === slug)) {
+      return res.status(409).json({ error: 'Ese enlace ya pertenece a otra tarjeta. Elige un nombre diferente.' });
+    }
+  }
+
   if (index >= 0) {
     cards[index] = { ...cards[index], ...incomingCard, updatedAt: new Date().toISOString() };
   } else {

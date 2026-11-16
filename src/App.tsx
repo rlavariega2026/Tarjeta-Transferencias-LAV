@@ -223,8 +223,8 @@ export default function App() {
     try {
       const result = await saveCard(cardToSave);
       if (!result.success) {
-        addToast('No se publicó en Hostinger', result.message, 'error');
-        return;
+        addToast(isPublish ? 'No se publicó en Hostinger' : 'No se pudo guardar', result.message, 'error');
+        return false;
       }
       if (result.success) {
         // Actualizar lista local
@@ -239,7 +239,7 @@ export default function App() {
         });
         setActiveCard(result.card);
 
-        if (result.card.status === 'demo') {
+        if (isPublish && result.card.status === 'demo') {
           addToast('DEMO publicada', getCardPublicUrl(result.card.slug), 'success');
         } else if (isPublish) {
           addToast(
@@ -248,11 +248,13 @@ export default function App() {
             'success'
           );
         } else {
-          addToast('Borrador guardado', 'Los cambios se han guardado de forma persistente.', 'success');
+          addToast('Tarjeta guardada', result.card.status === 'draft' ? 'Se guardó el borrador.' : 'Se guardaron los cambios de la tarjeta.', 'success');
         }
       }
+      return true;
     } catch (e: any) {
       addToast('Error al guardar', e.message || 'No se pudo guardar la tarjeta', 'error');
+      return false;
     }
   };
 
@@ -309,13 +311,12 @@ export default function App() {
 
   // Alternar publicación
   const handleTogglePublish = async (card: PaymentCard) => {
-    const nextStatus = card.status === 'published' ? 'draft' : 'published';
-    const updated: PaymentCard = {
-      ...card,
-      status: nextStatus,
-      publishedAt: nextStatus === 'published' ? (card.publishedAt || new Date().toISOString()) : undefined
-    };
-    await handleSaveCard(updated, nextStatus === 'published');
+    if (card.status !== 'published') {
+      setActiveCard(card);
+      setCurrentView('editor');
+      return;
+    }
+    await handleSaveCard({ ...card, status: 'draft', publishedAt: undefined }, false);
   };
 
   // 1. SI LA RUTA ES PÚBLICA, MOSTRAR EXCLUSIVAMENTE LA TARJETA PÚBLICA

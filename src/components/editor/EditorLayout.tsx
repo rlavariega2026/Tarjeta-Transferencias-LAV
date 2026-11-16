@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { 
   Save, 
   Globe, 
@@ -33,13 +33,13 @@ import { WhatsAppTab } from './tabs/WhatsAppTab';
 import { QRCodeTab } from './tabs/QRCodeTab';
 import { HostingerTab } from './tabs/HostingerTab';
 import { CardRenderer } from '../card/CardRenderer';
-import { getCardPublicUrl } from '../../services/apiService';
+import { getCardPublicUrl, isSlugAvailable, normalizePublicationName } from '../../services/apiService';
 
 interface EditorLayoutProps {
   card: PaymentCard;
   allCards: PaymentCard[];
   onChange: (card: PaymentCard) => void;
-  onSave: (card: PaymentCard, isPublish: boolean) => Promise<void>;
+  onSave: (card: PaymentCard, isPublish: boolean) => Promise<boolean>;
   onSaveAs: (card: PaymentCard, name: string) => Promise<void>;
   onBack: () => void;
   onDelete: (id: string) => void;
@@ -72,16 +72,25 @@ export const EditorLayout: React.FC<EditorLayoutProps> = ({
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
 
-  const publicUrl = getCardPublicUrl(card.slug);
+  const publishDialog = useRef<HTMLDialogElement>(null);
+  const [publishStatus, setPublishStatus] = useState<'published' | 'demo'>('published');
+  const [publishError, setPublishError] = useState('');
+  const [publicationName, setPublicationName] = useState('');
+  const savedCard = allCards.find(existing => existing.id === card.id);
+  const liveSlug = savedCard?.status === 'published' || savedCard?.status === 'demo' ? savedCard.slug : undefined;
+  const publicUrl = getCardPublicUrl(liveSlug || card.slug);
+  const publicationSlug = normalizePublicationName(publicationName);
+  const changingPublicLink = Boolean(liveSlug && publicationSlug !== liveSlug.toLowerCase());
+  const conflictingSlug = Boolean(publicationSlug && !isSlugAvailable(publicationSlug, card.id, allCards));
 
   const updateCard = (updates: Partial<PaymentCard>) => {
     onChange({ ...card, ...updates });
   };
 
-  const handleSaveDraft = async () => {
+  const handleSave = async () => {
     setIsSaving(true);
     try {
-      await onSave({ ...card, status: 'draft' }, false);
+      await onSave({ ...card, slug: liveSlug || card.slug }, false);
     } finally {
       setIsSaving(false);
     }
@@ -95,44 +104,37 @@ export const EditorLayout: React.FC<EditorLayoutProps> = ({
     finally { setIsSaving(false); }
   };
 
-  const handlePublish = async () => {
-    // Validaciones antes de publicar
+  const openPublishDialog = (status: 'published' | 'demo') => {
     if (!card.businessName.trim()) {
-      onNotify('Requisito pendiente', 'Por favor ingresa el nombre comercial del negocio antes de publicar.', 'error');
+      onNotify('Requisito pendiente', 'Ingresa el nombre comercial antes de publicar.', 'error');
       setActiveTab('identity');
       return;
     }
-
-    if (!card.slug.trim()) {
-      onNotify('Requisito pendiente', 'El enlace permanente (slug) no puede estar vacío.', 'error');
-      setActiveTab('identity');
-      return;
-    }
-
-    // Verificar cuentas bancarias
-    if (card.banking.enabled && card.banking.accounts.length === 0) {
-      onNotify('Requisito pendiente', 'Has activado transferencias pero no has agregado ninguna cuenta bancaria.', 'error');
+    if (status === 'published' && card.banking.enabled && card.banking.accounts.length === 0) {
+      onNotify('Requisito pendiente', 'Agrega una cuenta bancaria o desactiva transferencias.', 'error');
       setActiveTab('banking');
       return;
     }
 
+    setPublishError('');
+    setPublicationName(card.slug || normalizePublicationName(card.businessName));
+    setPublishStatus(status);
+    publishDialog.current?.showModal();
+  };
+
+  const handlePublish = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (isSaving || !publicationSlug || conflictingSlug) return;
+
     setIsSaving(true);
+    setPublishError('');
     try {
-      await onSave({ ...card, status: 'published' }, true);
+      const success = await onSave({ ...card, slug: publicationSlug, status: publishStatus }, true);
+      if (success) publishDialog.current?.close();
+      else setPublishError('No se pudo publicar. Revisa el nombre del enlace o vuelve a intentarlo.');
     } finally {
       setIsSaving(false);
     }
-  };
-
-  const handlePublishDemo = async () => {
-    if (!card.businessName.trim() || !card.slug.trim()) {
-      onNotify('Datos incompletos', 'Indica nombre comercial y dirección de publicación.', 'error');
-      return;
-    }
-    if (card.status === 'published' && !window.confirm('La DEMO reemplazará temporalmente la versión definitiva en la misma URL. ¿Continuar?')) return;
-    setIsSaving(true);
-    try { await onSave({ ...card, status: 'demo' }, false); }
-    finally { setIsSaving(false); }
   };
 
   const handleCopyLink = () => {
@@ -219,20 +221,20 @@ export const EditorLayout: React.FC<EditorLayoutProps> = ({
             </button>
 
             <button
-              onClick={handleSaveDraft}
+              onClick={handleSave}
               disabled={isSaving}
               className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-300 bg-slate-800 hover:bg-slate-700 rounded-xl transition-colors border border-slate-700 cursor-pointer"
             >
               <Save className="w-3.5 h-3.5" />
-              <span>{isSaving ? 'Guardando...' : 'Guardar Borrador'}</span>
+              <span>{isSaving ? 'Guardando...' : 'Guardar'}</span>
             </button>
 
-            <button onClick={handlePublishDemo} disabled={isSaving}
+            <button onClick={() => openPublishDialog('demo')} disabled={isSaving}
               className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-violet-100 bg-violet-700 hover:bg-violet-600 rounded-xl transition-colors">
               Publicar DEMO en Hostinger
             </button>
             <button
-              onClick={handlePublish}
+              onClick={() => openPublishDialog('published')}
               disabled={isSaving}
               className="flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 active:scale-95 rounded-xl shadow-md transition-all cursor-pointer"
             >
@@ -374,6 +376,51 @@ export const EditorLayout: React.FC<EditorLayoutProps> = ({
           </div>
         </div>
       </div>
+
+      <dialog
+        ref={publishDialog}
+        aria-labelledby="publication-title"
+        onCancel={event => { if (isSaving) event.preventDefault(); }}
+        className="m-auto w-[calc(100%-2rem)] max-w-md rounded-2xl border border-slate-700 bg-slate-900 p-6 text-slate-100 shadow-2xl backdrop:bg-black/70"
+      >
+        <form onSubmit={handlePublish} className="space-y-4">
+          <h2 id="publication-title" className="text-lg font-bold">
+            {publishStatus === 'demo' ? 'Publicar DEMO en Hostinger' : 'Publicar en Hostinger'}
+          </h2>
+          <label className="block space-y-1.5 text-sm font-semibold">
+            <span>Nombre de publicación</span>
+            <input
+              type="text"
+              required
+              value={publicationName}
+              disabled={isSaving}
+              onChange={event => setPublicationName(event.target.value)}
+              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2"
+            />
+          </label>
+          {publicationSlug && (
+            <p className="break-all rounded-lg bg-slate-950 p-3 text-xs text-emerald-300">
+              {getCardPublicUrl(publicationSlug)}
+            </p>
+          )}
+          {publishError && <p role="alert" className="text-sm text-rose-300">{publishError}</p>}
+          {conflictingSlug && <p role="alert" className="text-sm text-rose-300">Ese enlace ya pertenece a otra tarjeta.</p>}
+          {changingPublicLink && publicationSlug && (
+            <p className="text-sm text-amber-300">Al confirmar, la dirección anterior dejará de abrir esta tarjeta.</p>
+          )}
+          {publishStatus === 'demo' && savedCard?.status === 'published' && (
+            <p className="text-sm text-amber-300">La DEMO reemplazará la publicación definitiva.</p>
+          )}
+          <div className="flex justify-end gap-2">
+            <button type="button" disabled={isSaving} onClick={() => publishDialog.current?.close()}
+              className="rounded-xl bg-slate-800 px-4 py-2 text-sm">Cancelar</button>
+            <button type="submit" disabled={isSaving || !publicationSlug || conflictingSlug}
+              className="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-bold text-slate-950 disabled:opacity-50">
+              {isSaving ? 'Publicando…' : 'Confirmar publicación'}
+            </button>
+          </div>
+        </form>
+      </dialog>
 
       {/* Modal de Confirmación para Eliminar */}
       {showDeleteConfirm && (

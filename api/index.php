@@ -18,6 +18,11 @@ function loadCards(string $file): array {
   $data = json_decode((string)file_get_contents($file), true);
   return is_array($data) ? $data : [];
 }
+function lockCardChanges(string $file) {
+  $lock = fopen($file . '.lock', 'c');
+  if ($lock === false || !flock($lock, LOCK_EX)) respond(['error'=>'No se pudo iniciar el guardado'],500);
+  return $lock;
+}
 function saveCards(string $file, array $cards): bool {
   $json = json_encode(array_values($cards), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
   return $json !== false && file_put_contents($file, $json, LOCK_EX) !== false;
@@ -115,7 +120,22 @@ if (($parts[0] ?? '') !== '') {
   if ($parts[0] === 'cards' && $method === 'POST' && count($parts) === 1) {
     $incoming = json_decode((string)file_get_contents('php://input'), true);
     if (!is_array($incoming) || empty($incoming['slug']) || empty($incoming['businessName']) || empty($incoming['id'])) respond(['error'=>'Datos incompletos: id, slug y businessName son obligatorios'],400);
-    $cards = loadCards($cardsFile); $found = false;
+    $lock = lockCardChanges($cardsFile);
+    $cards = loadCards($cardsFile);
+    $previousSlug = null;
+    foreach ($cards as $card) {
+      if (($card['id'] ?? '') === $incoming['id']) $previousSlug = $card['slug'] ?? '';
+    }
+    $slug = strtolower((string)$incoming['slug']);
+    if ($slug !== strtolower((string)$previousSlug)) {
+      if (!preg_match('/\A[a-z0-9_-]+\z/', $slug)) respond(['error'=>'El nombre de publicación solo admite letras, números y guiones'],400);
+      foreach ($cards as $card) {
+        if (($card['id'] ?? '') !== $incoming['id'] && strtolower((string)($card['slug'] ?? '')) === $slug) {
+          respond(['error'=>'Ese enlace ya pertenece a otra tarjeta. Elige un nombre diferente.'],409);
+        }
+      }
+    }
+    $found = false;
     foreach ($cards as $i => $card) {
       if (($card['id'] ?? '') === $incoming['id']) { $cards[$i] = array_merge($card, $incoming, ['updatedAt'=>gmdate('c')]); $found=true; break; }
     }
@@ -124,6 +144,7 @@ if (($parts[0] ?? '') !== '') {
     respond(['success'=>true,'card'=>$incoming]);
   }
   if ($parts[0] === 'cards' && $method === 'DELETE' && isset($parts[1])) {
+    $lock = lockCardChanges($cardsFile);
     $id = rawurldecode($parts[1]); $cards = array_values(array_filter(loadCards($cardsFile), fn($c)=>(string)($c['id'] ?? '') !== $id));
     if (!saveCards($cardsFile,$cards)) respond(['error'=>'No se pudo guardar el cambio'],500);
     respond(['success'=>true,'id'=>$id]);

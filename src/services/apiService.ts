@@ -136,7 +136,6 @@ export async function saveCard(card: PaymentCard): Promise<{ success: boolean; c
     publishedAt: card.status === 'published' ? (card.publishedAt || now) : undefined
   };
 
-  // Guardar en local primero para cero latencia
   const localCards = getLocalCards();
   const existingIdx = localCards.findIndex(c => c.id === preparedCard.id);
   let updatedList: PaymentCard[];
@@ -146,8 +145,6 @@ export async function saveCard(card: PaymentCard): Promise<{ success: boolean; c
   } else {
     updatedList = [preparedCard, ...localCards];
   }
-  saveLocalCards(updatedList);
-
   // Guardar en backend (Express en dev / PHP en Hostinger)
   try {
     const response = await fetch(`${API_BASE}/cards`, {
@@ -160,6 +157,7 @@ export async function saveCard(card: PaymentCard): Promise<{ success: boolean; c
       body: JSON.stringify(preparedCard)
     });
 
+    if (response.status !== 409) saveLocalCards(updatedList);
     if (response.ok) {
       const serverResult = await response.json();
       return {
@@ -172,10 +170,11 @@ export async function saveCard(card: PaymentCard): Promise<{ success: boolean; c
       return {
         success: false,
         card: preparedCard,
-        message: `No se pudo guardar en Hostinger: ${errData.error || 'HTTP ' + response.status}. Los cambios permanecen en este navegador.`
+        message: `No se pudo guardar en Hostinger: ${errData.error || 'HTTP ' + response.status}${response.status === 409 ? '' : '. Los cambios permanecen en este navegador.'}`
       };
     }
   } catch (err: any) {
+    saveLocalCards(updatedList);
     console.warn('No se pudo conectar con el endpoint /api/cards, guardado en almacenamiento local:', err);
     return {
       success: false,
@@ -228,6 +227,11 @@ export async function duplicateCard(id: string): Promise<PaymentCard> {
 /**
  * Verifica si un slug está disponible
  */
+export function normalizePublicationName(name: string): string {
+  return name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim()
+    .replace(/\s+/g, '-').replace(/[^a-z0-9_-]/g, '');
+}
+
 export function isSlugAvailable(slug: string, currentCardId: string, allCards: PaymentCard[]): boolean {
   const clean = slug.toLowerCase().trim();
   if (!clean) return false;

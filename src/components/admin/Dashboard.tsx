@@ -346,9 +346,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       <button
                         onClick={() => onTogglePublish(card)}
                         className="hover:text-amber-400 transition-colors cursor-pointer text-[10px]"
-                        title={isPublished ? 'Pasar a borrador' : 'Publicar tarjeta'}
+                        title={isPublished ? 'Pasar a borrador' : 'Configurar publicación'}
                       >
-                        {isPublished ? 'Despublicar' : 'Publicar'}
+                        {isPublished ? 'Despublicar' : 'Configurar publicación'}
                       </button>
 
                       <button

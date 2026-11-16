@@ -3,7 +3,7 @@ import { getLogoAppearance } from '../../../services/cardAppearance';
 import React, { useRef } from 'react';
 import { Upload, X, Image as ImageIcon, Building, Tag, Globe, Check, AlertCircle } from 'lucide-react';
 import { PaymentCard } from '../../../types/paymentCard';
-import { uploadLogo, getHostingerSettings } from '../../../services/apiService';
+import { uploadLogo, getCardPublicUrl } from '../../../services/apiService';
 
 interface IdentityTabProps {
   card: PaymentCard;
@@ -19,7 +19,6 @@ export const IdentityTab: React.FC<IdentityTabProps> = ({
   onNotify
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const settings = getHostingerSettings();
 
   // Slug validation
   const cleanSlug = card.slug.toLowerCase().replace(/[^a-z0-9_-]/g, '');
@@ -173,7 +172,7 @@ export const IdentityTab: React.FC<IdentityTabProps> = ({
               <Globe className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
               <span>URL en Hostinger:</span>
               <span className="text-emerald-300">
-                {settings.baseUrl || 'https://lavdigitalmkt.com/pagos-digitales/'}t/{card.slug || 'nombre-del-negocio'}
+                {getCardPublicUrl(card.slug || 'nombre-del-negocio')}
               </span>
             </div>
           </div>
