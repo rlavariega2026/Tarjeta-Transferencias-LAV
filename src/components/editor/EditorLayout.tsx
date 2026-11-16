@@ -193,7 +193,7 @@ export const EditorLayout: React.FC<EditorLayoutProps> = ({
           </div>
 
           {/* Botones de Guardado y Publicación */}
-          <div className="flex items-center gap-2 w-full md:w-auto justify-end">
+          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto justify-start md:justify-end">
             <button
               onClick={handleCopyLink}
               className="p-2 text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-xl transition-colors border border-slate-700 cursor-pointer"
