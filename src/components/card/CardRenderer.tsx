@@ -354,6 +354,9 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
     );
   };
 
+  const backgroundImage = theme.backgroundImage
+    ? `linear-gradient(rgba(0,0,0,0.10), rgba(0,0,0,0.10)), url("${theme.backgroundImage.replace(/["\\\n\r\f]/g, (character) => encodeURIComponent(character))}")`
+    : undefined;
   const effects = getCardEffects(card);
   const { border, beam } = effects;
   const customBorder = border.style !== 'template';
@@ -370,7 +373,7 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
       }`}
       style={{
         backgroundColor: theme.backgroundColor,
-        backgroundImage: theme.backgroundImage ? `linear-gradient(rgba(0,0,0,0.10), rgba(0,0,0,0.10)), url(${theme.backgroundImage})` : undefined,
+        backgroundImage,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         '--transfer-outline-radius': `${border.radius}px`,
@@ -379,6 +382,7 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
         fontFamily: ({sans:"'Plus Jakarta Sans',sans-serif",display:"'Outfit',sans-serif",serif:"'Playfair Display',Georgia,serif",mono:"'JetBrains Mono',monospace",poppins:"'Poppins','Plus Jakarta Sans',sans-serif",montserrat:"'Montserrat',sans-serif",lora:"'Lora',Georgia,serif",space:"'Space Grotesk',sans-serif"} as Record<string,string>)[theme.fontFamily] || "'Plus Jakarta Sans',sans-serif"
       } as React.CSSProperties}
       data-template={templateId}
+      data-custom-background={backgroundImage ? 'true' : undefined}
       data-design-border={customBorder ? 'custom' : undefined}
       data-design-shadow={effects.shadow.enabled ? 'custom' : undefined}
     >
@@ -397,7 +401,8 @@ export const CardRenderer: React.FC<CardRendererProps> = ({
         }`}
         style={{
           backgroundColor: theme.surfaceColor,
-          backgroundImage: theme.backgroundImage ? `linear-gradient(rgba(0,0,0,0.10), rgba(0,0,0,0.10)), url(${theme.backgroundImage})` : (theme.backgroundGradient || undefined),
+          backgroundImage: theme.backgroundGradient || undefined,
+          '--transfer-background-image': backgroundImage,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           '--transfer-outline-width': `${border.width}px`,

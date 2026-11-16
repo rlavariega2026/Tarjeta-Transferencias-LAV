@@ -25,7 +25,7 @@ export const CustomizationTab: React.FC<CustomizationTabProps> = ({
     try {
       const result = await uploadLogo(file);
       updateTheme({ backgroundImage: result.url });
-      onNotify('Fondo actualizado', 'La imagen se guardó y aparecerá en la tarjeta publicada.', 'success');
+      onNotify('Fondo actualizado', 'Ya puedes verla en la vista previa. Publica o actualiza la tarjeta para mostrarla al público.', 'success');
     } catch (error: any) {
       onNotify('No se pudo cargar el fondo', error?.message || 'Usa una imagen PNG, JPG o WebP.', 'error');
     }
@@ -74,7 +74,7 @@ export const CustomizationTab: React.FC<CustomizationTabProps> = ({
       <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-3">
         <div>
           <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">Imagen de fondo</h4>
-          <p className="text-xs text-slate-400 mt-1">Sube una fotografía o textura para colocarla detrás de la tarjeta.</p>
+          <p className="text-xs text-slate-400 mt-1">Sube una fotografía o textura para usarla como fondo de la tarjeta.</p>
         </div>
         <input
           ref={backgroundInputRef}

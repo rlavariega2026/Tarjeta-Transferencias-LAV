@@ -204,3 +204,11 @@
 @media (prefers-reduced-motion: reduce) {
   .transfer-card-beam { animation: none; }
 }
+
+/* A custom photo takes precedence over the template's default background. */
+.premium-template[data-custom-background="true"] .premium-card-shell {
+  background-image: var(--transfer-background-image) !important;
+  background-position: center !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+}
